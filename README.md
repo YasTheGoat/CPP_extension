@@ -2,6 +2,9 @@ Welcome to CPP\_ extension ! 🚀🚀
 
 This extension allows you to compile projects with as much files as you want. It currently supports g++ and clang++.
 
+RIGHT NOW when using g++, you can create exe and dll files.
+RIGHT NOW when using clang++, you can create exe files only.
+
 Four commands are availabe:
 
 - `CPP_ : Compile project` -> This builds the executable for your project
@@ -16,5 +19,3 @@ You can also specify ressources path. These ressources are then copied in the sa
 **IMPORTANT** -> When adding includes, dependencies, librarys or ressources, please follow the already existent exemple. Meaning that you have to put a tab space before, then this character '-' and then another space before entering your path. [ - YOUR_PATH]
 
 **IMPORTANT** -> Do not , in any case , modify the history.yml file located in 'build/config'. This file keeps track of the compilations and allows this extension to decide which file to compile and which file not to compile.
-
-_NOTE_ -> We are currently working on adding dll and lib for the compilation.
