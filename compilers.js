@@ -40,14 +40,19 @@ class GCC {
   }
 
   async link(settings, origin) {
-    const { name, app_type, version, dependencies, librarys, ressources } =
-      setupSettings(settings, origin);
+    const { name, app_type, version, dependencies, librarys } = setupSettings(
+      settings,
+      origin
+    );
 
     origin.replace("\\", "/");
-
-    const response = await executeCommand(
-      `g++ -g ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`
-    );
+    var command = "";
+    if (app_type === "exe") {
+      command = `g++ -g ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
+    } else if (app_type === "dll") {
+      command = `g++ -g ${version} -shared -o ${origin}/build/out/${name}.dll ${origin}/build/obj/*.o -Wl,--out-implib,${origin}/build/out/lib${name}.a ${dependencies} ${librarys}`;
+    }
+    const response = await executeCommand(command);
 
     if (response.res !== 0) {
       out.appendLine(response.msg);
@@ -100,10 +105,14 @@ class CLANG {
 
     // result = os.system(f'cmd /c"{compiler} {build_parameter} -g --std=c++{cpp_version} bin\\obj\\{DirPath}\\*.o -o bin\\build\\{app_name} {libs} {dependencies}"')
     origin.replace("\\", "/");
+    var command = "";
+    if (app_type === "exe") {
+      command = `clang++ -g ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
+    } else if (app_type === "dll") {
+      command = "";
+    }
 
-    const response = await executeCommand(
-      `clang++ -g ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`
-    );
+    const response = await executeCommand(command);
 
     if (response.res !== 0) {
       out.appendLine(response.msg);
@@ -133,7 +142,7 @@ const setupSettings = (settings, origin) => {
     if (lib !== "exemple") librarys += `-l${lib} `;
   });
   settings.preprocessor.forEach((pre) => {
-    if (pre !== "exemple") preprocessors += `-D${path.join(origin, pre)} `;
+    if (pre !== "exemple") preprocessors += `-D${pre} `;
   });
 
   return {
@@ -148,7 +157,7 @@ const setupSettings = (settings, origin) => {
 };
 
 const compileFiles = async (files, settings, history, compiler, origin) => {
-  if (settings.application_type !== "exe") {
+  if (settings.application_type !== "exe" && compiler === "clang++") {
     vscode.window.showErrorMessage(
       `This application type (${settings.application_type}) is not yet supported`
     );
