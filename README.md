@@ -2,8 +2,10 @@ Welcome to CPP\_ extension ! 🚀🚀
 
 This extension allows you to compile projects with as much files as you want. It currently supports g++ and clang++.
 
-RIGHT NOW when using g++, you can create exe and dll files.
+RIGHT NOW when using g++, you can create exe and dll files (static lib is not yet perfectly working).
 RIGHT NOW when using clang++, you can create exe files only.
+
+_CONVENTION_ for application_type -> (exe, dll, slib)
 
 Four commands are availabe:
 

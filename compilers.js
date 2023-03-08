@@ -111,7 +111,9 @@ class CLANG {
     if (app_type === "exe") {
       command = `clang++ -g ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
     } else if (app_type === "dll") {
-      command = "";
+      command = `clang++ ${version} -shared -o ${origin}/build/out/${name}.dll ${origin}/build/obj/*.o -Wl,--out-implib,${origin}/build/out/lib${name}.a ${dependencies} ${librarys}`;
+    } else if (app_type === "slib") {
+      command = `ar rcs ${origin}/build/out/lib${name}.a ${origin}/build/obj/*.o ${dependencies} ${librarys}`;
     }
 
     const response = await executeCommand(command);
