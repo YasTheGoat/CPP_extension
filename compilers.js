@@ -48,9 +48,11 @@ class GCC {
     origin.replace("\\", "/");
     var command = "";
     if (app_type === "exe") {
-      command = `g++ -g ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
+      command = `g++ ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
     } else if (app_type === "dll") {
-      command = `g++ -g ${version} -shared -o ${origin}/build/out/${name}.dll ${origin}/build/obj/*.o -Wl,--out-implib,${origin}/build/out/lib${name}.a ${dependencies} ${librarys}`;
+      command = `g++ ${version} -shared -o ${origin}/build/out/${name}.dll ${origin}/build/obj/*.o -Wl,--out-implib,${origin}/build/out/lib${name}.a ${dependencies} ${librarys}`;
+    } else if (app_type === "slib") {
+      command = `ar rcs ${origin}/build/out/lib${name}.a ${origin}/build/obj/*.o ${dependencies} ${librarys}`;
     }
     const response = await executeCommand(command);
 
@@ -86,7 +88,7 @@ class CLANG {
     const splitPath = file.split("\\");
     const fileName = splitPath.at(-1);
     const response = await executeCommand(
-      `clang++ -g ${version} ${preprocessors} ${includes} -c ${file} -o ${origin}/build/obj/${fileName}.o`
+      `clang++ ${version} ${preprocessors} ${includes} -c ${file} -o ${origin}/build/obj/${fileName}.o`
     );
     origin.replace("\\", "/");
     if (response.res !== 0) {
