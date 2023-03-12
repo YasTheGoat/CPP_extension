@@ -38,7 +38,7 @@ You can specify an application type. It can either be an executable, a dynamic l
 > > <br>
 > > You can also use the quick access buttons availabe in the status bar:<br><br>
 
-<img src="https://user-images.githubusercontent.com/64434215/224558370-78de9076-4efc-40ff-b887-391028733f3f.png">
+<img src="https://user-images.githubusercontent.com/64434215/224561838-49c0f5ef-0582-4630-8536-fc0130539325.png"><img>
 
 <br>
 
@@ -48,16 +48,16 @@ You can specify an application type. It can either be an executable, a dynamic l
 
 ### Creating a new Project <br><br>
 
-<video src="https://user-images.githubusercontent.com/64434215/224559840-c79250dd-53cb-441d-bd00-4595f35021fd.mp4">
+<video src="https://user-images.githubusercontent.com/64434215/224561703-5c948678-56d2-4ef8-b6b0-09f4633e6282.mp4"><video>
 
 <br><br>
 
 ### Compiling a Project <br><br>
 
-<video src="https://user-images.githubusercontent.com/64434215/224560183-414375c1-e7e8-4959-a594-1b832330e0e1.mp4">
+<video src="https://user-images.githubusercontent.com/64434215/224561749-ab002d64-2ee8-40ee-bd18-2025da37341f.mp4"><video>
 
 <br><br>
 
 ### You can also check out this youtube video for more information <br><br>
 
-<video src="https://www.youtube.com/watch?v=UFmJ48t1QHM&t=245s">
+https://www.youtube.com/watch?v=UFmJ48t1QHM&t=245s"
