@@ -7,17 +7,35 @@ const vscode = require("vscode");
 
 class GCC {
   async run(settings, files, origin) {
-    for (let i = 0; i < files.length; i++) {
-      out.appendLine("Compiling " + files[i].split("\\").at(-1));
+    var msg = [];
 
-      const res = await this.compile(settings, files[i], origin);
+    await Promise.all(
+      files.map(async (file) => {
+        out.appendLine("Compiling " + file.split("\\").at(-1));
+        const res = await this.compile(settings, file, origin);
+        if (res !== 0) {
+          msg.push([res, file.split("\\").at(-1)]);
+        } else {
+          updatehistory(file, origin);
+        }
+      })
+    );
 
-      if (res !== 0) {
-        return res;
+    if (msg.length > 0) {
+      out.appendLine("");
+      out.appendLine("");
+      out.appendLine(msg.length + " errors found");
+      out.appendLine("");
+      for (let i = 0; i < msg.length; i++) {
+        out.appendLine("FILE : " + msg[i][1].toUpperCase());
+        out.appendLine(msg[i]);
+        out.appendLine("");
+        out.appendLine("");
       }
+      return 1;
+    } else {
+      return 0;
     }
-
-    return 0;
   }
 
   async compile(settings, file, origin) {
@@ -35,8 +53,7 @@ class GCC {
     );
     origin.replace("\\", "/");
     if (response.res !== 0) {
-      out.appendLine(response.msg);
-      return 1;
+      return response.msg;
     } else {
       return 0;
     }
@@ -70,17 +87,35 @@ class GCC {
 
 class CLANG {
   async run(settings, files, origin) {
-    for (let i = 0; i < files.length; i++) {
-      out.appendLine("Compiling " + files[i].split("\\").at(-1));
+    var msg = [];
 
-      const res = await this.compile(settings, files[i], origin);
+    await Promise.all(
+      files.map(async (file) => {
+        out.appendLine("Compiling " + file.split("\\").at(-1));
+        const res = await this.compile(settings, file, origin);
+        if (res !== 0) {
+          msg.push([res, file.split("\\").at(-1)]);
+        } else {
+          updatehistory(file, origin);
+        }
+      })
+    );
 
-      if (res !== 0) {
-        return res;
+    if (msg.length > 0) {
+      out.appendLine("");
+      out.appendLine("");
+      out.appendLine(msg.length + " errors found");
+      out.appendLine("");
+      for (let i = 0; i < msg.length; i++) {
+        out.appendLine("FILE : " + msg[i][1].toUpperCase());
+        out.appendLine(msg[i]);
+        out.appendLine("");
+        out.appendLine("");
       }
+      return 1;
+    } else {
+      return 0;
     }
-
-    return 0;
   }
 
   async compile(settings, file, origin) {
@@ -98,8 +133,7 @@ class CLANG {
     );
     origin.replace("\\", "/");
     if (response.res !== 0) {
-      out.appendLine(response.msg);
-      return 1;
+      return response.msg;
     } else {
       return 0;
     }
@@ -193,7 +227,9 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     out.appendLine("");
     out.appendLine("");
     out.appendLine("Building " + projectName + " project");
-    out.appendLine("Starting compilation using g++");
+    out.appendLine(
+      "Starting compilation using g++ for " + files_.length + " files"
+    );
     const res1 = await gcc.run(settings, files_, origin);
     if (res1 !== 0) {
       out.appendLine("Compilation failed. Aborting linking.");
@@ -211,7 +247,9 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     out.appendLine("");
     out.appendLine("");
     out.appendLine("Building " + projectName + " project");
-    out.appendLine("Starting compilation using clang++");
+    out.appendLine(
+      "Starting compilation using clang++ " + files_.length + " files"
+    );
     const res1 = await clang.run(settings, files_, origin);
     if (res1 !== 0) {
       out.appendLine("Compilation failed. Aborting linking.");
@@ -225,10 +263,6 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     }
     out.appendLine("Successfully built the project. Check 'build/out'");
   }
-
-  files_.forEach((file) => {
-    updatehistory(file, origin);
-  });
 
   return 0;
 };
