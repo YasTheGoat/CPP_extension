@@ -5,14 +5,14 @@
   "private": true,
   "icon": "./CPPLOGO.png",
   "description": "An extension that allows for compiling cpp projects. Supports debug and release mode with as many cpp files as you want",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "engines": {
     "vscode": "^1.75.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": ["*"],
+  "activationEvents": ["onLanguage:cpp"],
   "main": "./extension.js",
   "contributes": {
     "commands": [
