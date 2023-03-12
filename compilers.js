@@ -204,8 +204,8 @@ const setupSettings = (settings, origin) => {
 
 const compileFiles = async (files, settings, history, compiler, origin) => {
   if (
-    settings.application_type.toUpperCase() !== "EXE" ||
-    settings.application_type.toUpperCase() !== "DLL" ||
+    settings.application_type.toUpperCase() !== "EXE" &&
+    settings.application_type.toUpperCase() !== "DLL" &&
     settings.application_type.toUpperCase() !== "SLIB"
   ) {
     vscode.window.showErrorMessage(

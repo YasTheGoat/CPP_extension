@@ -403,7 +403,7 @@ const run = async () => {
     ) {
       if (settings.build.toUpperCase() === "DEBUG") {
         const config = vscode.workspace.getConfiguration("launch", workspace);
-        var curr = config.configurations;
+        var curr = [];
         const data = {
           name: "CPP_ Debug",
           type: "cppdbg",
@@ -425,19 +425,13 @@ const run = async () => {
             },
           ],
         };
-        if (curr.find((item) => item.name === "CPP_ Debug")) {
-          const index = curr.indexOf(
-            curr.find((item) => item.name === "CPP_ Debug")
-          );
-          curr[index] = data;
-        } else {
-          curr.push(data);
-        }
+
+        curr.push(data);
 
         await config.update("configurations", curr);
 
         const res = await vscode.commands.executeCommand(
-          "workbench.action.debug.run",
+          "workbench.action.debug.start",
           "CPP_ Debug"
         );
       } else {
