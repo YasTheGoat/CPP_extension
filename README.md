@@ -38,7 +38,7 @@ You can specify an application type. It can either be an executable, a dynamic l
 > > <br>
 > > You can also use the quick access buttons availabe in the status bar:<br><br>
 
-<img src="https://user-images.githubusercontent.com/64434215/224558370-78de9076-4efc-40ff-b887-391028733f3f.png">
+<img src="https://user-images.githubusercontent.com/64434215/224558370-78de9076-4efc-40ff-b887-391028733f3f.png" />
 
 <br>
 
