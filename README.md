@@ -48,3 +48,16 @@ You can also use the quick access buttons availabe in the status bar:<br><br>
 
 https://user-images.githubusercontent.com/64434215/224559840-c79250dd-53cb-441d-bd00-4595f35021fd.mp4
 
+<br><br>
+
+### Compiling a Project <br><br>
+
+
+https://user-images.githubusercontent.com/64434215/224560183-414375c1-e7e8-4959-a594-1b832330e0e1.mp4
+
+<br><br>
+
+### You can also check out this youtube video for more information <br><br>
+
+https://www.youtube.com/watch?v=UFmJ48t1QHM&t=245s
+
