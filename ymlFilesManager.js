@@ -2,8 +2,9 @@ const yml = require("js-yaml");
 const fs = require("fs");
 
 const SettingsTemplate = `name: "app"       #Do not put any space in the name
-application_type: "exe"                     # Currently working on the implementation of dll and lib types
-cpp_version: "auto"         
+application_type: "exe"                     # exe, dll, or slib
+cpp_version: "auto" 
+build: "Debug"                              #Debug or Release
 \n
 include:
     - exemple
@@ -14,7 +15,9 @@ library:
 preprocessor:
     - exemple
 ressources:                                # The ressources are folders or files that will be copied into the out folder when the compilation is over
-    - exemple             
+    - exemple        
+ignore:
+    - exemple     
 
 # IMPORTANT NOTICE 1: always put a space between "-" and the 
 #                     variable after. Also put a TAB space before

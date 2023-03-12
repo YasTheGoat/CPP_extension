@@ -21,14 +21,17 @@ class GCC {
   }
 
   async compile(settings, file, origin) {
-    const { version, includes, preprocessors } = setupSettings(
+    const { version, includes, preprocessors, build } = setupSettings(
       settings,
       origin
     );
+    const optimization =
+      build.toUpperCase() === "DEBUG" ? "-O0 -g" : "-O3 -DNDEBUG";
+
     const splitPath = file.split("\\");
     const fileName = splitPath.at(-1);
     const response = await executeCommand(
-      `g++ -g ${version} ${preprocessors} ${includes} -c ${file} -o ${origin}/build/obj/${fileName}.o`
+      `g++ ${optimization} ${version} ${preprocessors} ${includes} -c ${file} -o ${origin}/build/obj/${fileName}.o`
     );
     origin.replace("\\", "/");
     if (response.res !== 0) {
@@ -47,11 +50,11 @@ class GCC {
 
     origin.replace("\\", "/");
     var command = "";
-    if (app_type === "exe") {
+    if (app_type.toUpperCase() === "EXE") {
       command = `g++ ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
-    } else if (app_type === "dll") {
+    } else if (app_type.toUpperCase() === "DLL") {
       command = `g++ ${version} -shared -o ${origin}/build/out/${name}.dll ${origin}/build/obj/*.o -Wl,--out-implib,${origin}/build/out/lib${name}.a ${dependencies} ${librarys}`;
-    } else if (app_type === "slib") {
+    } else if (app_type.toUpperCase() === "SLIB") {
       command = `ar rcs ${origin}/build/out/lib${name}.a ${origin}/build/obj/*.o ${dependencies} ${librarys}`;
     }
     const response = await executeCommand(command);
@@ -81,14 +84,17 @@ class CLANG {
   }
 
   async compile(settings, file, origin) {
-    const { version, includes, preprocessors } = setupSettings(
+    const { version, includes, preprocessors, build } = setupSettings(
       settings,
       origin
     );
+    const optimization =
+      build.toUpperCase() === "DEBUG" ? "-00 -g" : "-02 -s -DNDEBUG";
+
     const splitPath = file.split("\\");
     const fileName = splitPath.at(-1);
     const response = await executeCommand(
-      `clang++ ${version} ${preprocessors} ${includes} -c ${file} -o ${origin}/build/obj/${fileName}.o`
+      `clang++ ${optimization} ${version} ${preprocessors} ${includes} -c ${file} -o ${origin}/build/obj/${fileName}.o`
     );
     origin.replace("\\", "/");
     if (response.res !== 0) {
@@ -108,11 +114,11 @@ class CLANG {
     // result = os.system(f'cmd /c"{compiler} {build_parameter} -g --std=c++{cpp_version} bin\\obj\\{DirPath}\\*.o -o bin\\build\\{app_name} {libs} {dependencies}"')
     origin.replace("\\", "/");
     var command = "";
-    if (app_type === "exe") {
-      command = `clang++ -g ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
-    } else if (app_type === "dll") {
+    if (app_type.toUpperCase() === "EXE") {
+      command = `clang++ ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
+    } else if (app_type.toUpperCase() === "DLL") {
       command = `clang++ ${version} -shared -o ${origin}/build/out/${name}.dll ${origin}/build/obj/*.o -Wl,--out-implib,${origin}/build/out/lib${name}.a ${dependencies} ${librarys}`;
-    } else if (app_type === "slib") {
+    } else if (app_type.toUpperCase() === "SLIB") {
       command = `ar rcs ${origin}/build/out/lib${name}.a ${origin}/build/obj/*.o ${dependencies} ${librarys}`;
     }
 
@@ -136,6 +142,7 @@ const setupSettings = (settings, origin) => {
   var dependencies = "";
   var librarys = "";
   var preprocessors = "";
+  var build = settings.build;
   settings.include.forEach((inc) => {
     if (inc !== "exemple") includes += `-I${path.join(origin, inc)} `;
   });
@@ -157,11 +164,15 @@ const setupSettings = (settings, origin) => {
     dependencies: dependencies,
     librarys: librarys,
     preprocessors: preprocessors,
+    build: build,
   };
 };
 
 const compileFiles = async (files, settings, history, compiler, origin) => {
-  if (settings.application_type !== "exe" && compiler === "clang++") {
+  if (
+    settings.application_type.toUpperCase() !== "EXE" &&
+    compiler === "clang++"
+  ) {
     vscode.window.showErrorMessage(
       `This application type (${settings.application_type}) is not yet supported`
     );
@@ -215,19 +226,49 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     out.appendLine("Successfully built the project. Check 'build/out'");
   }
 
+  files_.forEach((file) => {
+    updatehistory(file, origin);
+  });
+
   return 0;
 };
 
 const filterFiles = (settings, history, files, origin) => {
-  //Deletes unused object files
+  const ignores = [];
+
+  const findFiles = (origin) => {
+    const stat = fs.statSync(origin);
+    if (stat.isDirectory()) {
+      const files = fs.readdirSync(origin);
+      files.forEach((file) => {
+        const file_ = path.join(origin, file);
+        const stat_ = fs.statSync(file_);
+
+        if (stat_.isDirectory()) {
+          findFiles(file_);
+        } else {
+          if (file.endsWith("cpp")) {
+            ignores.push(file_);
+          }
+        }
+      });
+    } else {
+      ignores.push(origin);
+    }
+  };
+  settings.ignore.forEach((ig) => {
+    if (ig !== "exemple") {
+      findFiles(path.join(origin, ig));
+    }
+  });
+
   const objFiles = fs.readdirSync(path.join(origin, "build/obj"));
   for (let i = 0; i < objFiles.length; i++) {
     const objName = objFiles[i];
     var found = false;
     for (let b = 0; b < files.length; b++) {
       const fileName = files[b].split("\\").at(-1);
-
-      if (objName === fileName + ".o") {
+      if (objName === fileName + ".o" && !ignores.includes(files[b])) {
         found = true;
         break;
       }
@@ -243,36 +284,64 @@ const filterFiles = (settings, history, files, origin) => {
   const his = history ? history : {};
   var finalFiles = [];
 
-  for (let i = 0; i < files.length; i++) {
-    var found = false;
-    for (const [key, value] of Object.entries(his)) {
-      if (files[i] === key) {
-        const mTime = fs.statSync(files[i]).mtime;
+  const filterByTime = () => {
+    for (let i = 0; i < files.length; i++) {
+      var found = false;
+      for (const [key, value] of Object.entries(his)) {
+        if (files[i] === key) {
+          const mTime = fs.statSync(files[i]).mtime;
 
-        if (mTime > value.time) {
-          finalFiles.push(files[i]);
-          updatehistory(files[i], origin);
-        } else {
-          const hFiles = value.files;
-          for (let i = 0; i < hFiles.length; i++) {
-            const hmTime = fs.statSync(hFiles[i].file).mtime;
+          if (mTime > value.time && !ignores.includes(files[i])) {
+            finalFiles.push(files[i]);
+          } else {
+            const hFiles = value.files;
+            for (let i = 0; i < hFiles.length; i++) {
+              const hmTime = fs.statSync(hFiles[i].file).mtime;
 
-            if (hmTime > hFiles[i].time) {
-              finalFiles.push(files[i]);
-              updatehistory(files[i], origin);
-              break;
+              if (hmTime > hFiles[i].time && !ignores.includes(files[i])) {
+                finalFiles.push(files[i]);
+                break;
+              }
             }
           }
+          found = true;
+          break;
         }
-        found = true;
-        break;
+      }
+
+      if (!found && !ignores.includes(files[i])) {
+        finalFiles.push(files[i]);
       }
     }
-
-    if (!found) {
-      finalFiles.push(files[i]);
-      updatehistory(files[i], origin);
+  };
+  if (his.build) {
+    if (his.build !== settings.build) {
+      modifyFile(
+        "build",
+        settings.build,
+        path.join(origin, "build/config/history.yml")
+      );
+      files.forEach((file) => {
+        if (!ignores.includes(file)) {
+          finalFiles.push(file);
+          updatehistory(file, origin);
+        }
+      });
+    } else {
+      filterByTime();
     }
+  } else {
+    modifyFile(
+      "build",
+      settings.build,
+      path.join(origin, "build/config/history.yml")
+    );
+    files.forEach((file) => {
+      if (!ignores.includes(file)) {
+        finalFiles.push(file);
+        updatehistory(file, origin);
+      }
+    });
   }
   return finalFiles;
 };
