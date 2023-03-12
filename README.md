@@ -12,12 +12,12 @@ You can specify an application type. It can either be an executable, a dynamic l
 
 > ## This extension also support Debug and Release mode
 >
-> > - Debug exposes the code to the gdb compiler and enables debugging features such as breakpoint and others.
+> > - Debug exposes the code to the gdb debugger and enables debugging features such as breakpoint and others.
 > >
-> > - Release mode optimizes and and reduces your application size when possible. This mode should be used when the project is ready to be published
+> > - Release mode optimizes and and reduces your application size when possible. This mode should only be used when the project is ready to be published
 
 <br>
-One of the best features is the compilation history. It's a file that allows CPP extension to decide wich to compile and which file nt to compile making the<br> build time faster.<br>
+One of the best features is the compilation history. It's a file that allows CPP extension to decide wich file to compile and which file not to compile making the build time faster.<br>
 And Finally, this extension compiles your files in parallel (asynchronously), which makes the build time even faster.<br>
 <br>
 

@@ -1,5 +1,9 @@
 # Change Log
 
+## [Update 1.3.4]
+
+    - Fixed typoes in the readme file
+
 ## [Update 1.3.3]
 
     - Updated the readme . Added videos and better explanations

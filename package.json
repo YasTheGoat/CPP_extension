@@ -4,13 +4,27 @@
   "publisher": "bleastProgram",
   "private": true,
   "icon": "./CPPLOGO.png",
-  "description": "An extension that allows for compiling cpp projects. Supports debug and release mode with as many cpp files as you want",
-  "version": "1.3.3",
+  "galleryBanner": {
+    "color": "#000000",
+    "theme": "dark"
+  },
+  "description": "An extension for compiling cpp projects. Supports debug and release mode with as many cpp files as you want",
+  "version": "1.3.4",
   "engines": {
     "vscode": "^1.75.0"
   },
   "categories": [
+    "Programming Languages",
+    "Debuggers",
     "Other"
+  ],
+  "keywords" : [
+    "cpp",
+    "runner",
+    "compile",
+    "compiler",
+    "c++",
+    "rogramming"
   ],
   "activationEvents": ["onLanguage:cpp"],
   "main": "./extension.js",
