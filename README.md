@@ -38,7 +38,7 @@ You can specify an application type. It can either be an executable, a dynamic l
 > > <br>
 > > You can also use the quick access buttons availabe in the status bar:<br><br>
 
-<img src="https://user-images.githubusercontent.com/64434215/224561838-49c0f5ef-0582-4630-8536-fc0130539325.png"><img>
+<img src="https://user-images.githubusercontent.com/64434215/224561838-49c0f5ef-0582-4630-8536-fc0130539325.png"></img>
 
 <br>
 
@@ -48,13 +48,13 @@ You can specify an application type. It can either be an executable, a dynamic l
 
 ### Creating a new Project <br><br>
 
-<video src="https://user-images.githubusercontent.com/64434215/224561703-5c948678-56d2-4ef8-b6b0-09f4633e6282.mp4"><video>
+<video src="https://user-images.githubusercontent.com/64434215/224561703-5c948678-56d2-4ef8-b6b0-09f4633e6282.mp4"></video>
 
 <br><br>
 
 ### Compiling a Project <br><br>
 
-<video src="https://user-images.githubusercontent.com/64434215/224561749-ab002d64-2ee8-40ee-bd18-2025da37341f.mp4"><video>
+<video src="https://user-images.githubusercontent.com/64434215/224561749-ab002d64-2ee8-40ee-bd18-2025da37341f.mp4"></video>
 
 <br><br>
 
