@@ -35,13 +35,16 @@ And Finally, this extension compiles your files in parallel (asynchronously), wh
   >>
 <br>
 You can also use the quick access buttons availabe in the status bar:<br><br>
+
 ![Screenshot 2023-03-12 122818](https://user-images.githubusercontent.com/64434215/224558370-78de9076-4efc-40ff-b887-391028733f3f.png)<br>
+
 <br>
 
 
 # DEMO <br>
 <br>
 
-Creating a new Project<br><br>
+### Creating a new Project <br><br>
+
 https://user-images.githubusercontent.com/64434215/224559840-c79250dd-53cb-441d-bd00-4595f35021fd.mp4
 
