@@ -1,9 +1,19 @@
 # Change Log
 
-All notable changes to the "cpp-runner" extension will be documented in this file.
+## [Update 1.3.0]
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+    - Added multithreaded compilation. All your files compile at the same time.
+    - Fixed a bug with the compilation history
+    - Added quick access buttons to the status bar (workspace, compiler, compile, recompile)
 
-## [Unreleased]
+## [UPDATE 1.2.0]
 
-- Initial release
+    -Now you can decide between Debug and Release Mode -Release mode enables code optimization -Debug mode uses gdb to enable debugging functions(breakpoints, inspector, etc...)
+
+    -Added an ignore section in the settings. It supports files or folders. These files or folder will be ignored by the compiler
+
+    -Added support for creating dll or static librarys(slib) in g++. (Should work with clang++ but not tested)
+
+    -Improved the history system
+
+    -ENJOY 🎉🎉
