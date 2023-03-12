@@ -4,7 +4,7 @@ Welcome to my CPP extension ! 🚀🚀<br>
 <br>
 This extension allows you to build your cpp projects. Your project can contain an infinite amount of files and my extension will automatically find them all.<br>
 You can add include paths, librarys paths, librarys names, preprocessors, and ignore paths which will be ignored in the build.<br>
-You can specify an application type. It can either be an executable, a dynamic library or a static library **(exe, dll, slib)**<br>
+You can specify an application type. It can either be an executable, a dynamic library or a static library (exe, dll, slib)<br>
 >This extension also support Debug and Release mode<br>
   >>- Debug exposes the code to the gdb compiler and enables debugging features such as breakpoint and others.<br>
   >>- Release mode optimizes and and reduces your application size when possible. This mode should be used when the project is ready to be published<br>
