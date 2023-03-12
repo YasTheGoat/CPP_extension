@@ -13,7 +13,7 @@ You can specify an application type. It can either be an executable, a dynamic l
 One of the best features is the compilation history. It's a file that allows CPP extension to decide wich to compile nad which file no to compile making the<br> build time faster.<br>
 And Finally, this extension compiles your files in parallel (asynchronously), which makes the build time even faster.<br>
 <br>
-# COMMANDS
+# COMMANDS<br>
 <br>
 >Four commands are availabe:<br>
   >>-'CPP_ : Compile project' -> This builds the executable for your project<br>
@@ -22,5 +22,9 @@ And Finally, this extension compiles your files in parallel (asynchronously), wh
   >>-'CPP_ : Configure project' -> This creates the folders and the files necessary for the extension to work.<br>
 <br>
 You can also use the quick access buttons availabe in the status bar:<br><br>
-![Screenshot 2023-03-12 122818](https://user-images.githubusercontent.com/64434215/224558370-78de9076-4efc-40ff-b887-391028733f3f.png)
+![Screenshot 2023-03-12 122818](https://user-images.githubusercontent.com/64434215/224558370-78de9076-4efc-40ff-b887-391028733f3f.png)<br>
+<br>
 
+#DEMO<br>
+<br>
+CREATING A NEW PROJECT:<br><br>
