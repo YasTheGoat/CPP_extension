@@ -9,7 +9,7 @@
     "theme": "dark"
   },
   "description": "An extension for compiling cpp projects. Supports debug and release mode with as many cpp files as you want",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -24,7 +24,10 @@
     "compile",
     "compiler",
     "c++",
-    "rogramming"
+    "programming",
+    "debugger",
+    "g++",
+    "gdb"
   ],
   "activationEvents": ["onLanguage:cpp"],
   "main": "./extension.js",

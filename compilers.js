@@ -204,11 +204,12 @@ const setupSettings = (settings, origin) => {
 
 const compileFiles = async (files, settings, history, compiler, origin) => {
   if (
-    settings.application_type.toUpperCase() !== "EXE" &&
-    compiler === "clang++"
+    settings.application_type.toUpperCase() !== "EXE" ||
+    settings.application_type.toUpperCase() !== "DLL" ||
+    settings.application_type.toUpperCase() !== "SLIB"
   ) {
     vscode.window.showErrorMessage(
-      `This application type (${settings.application_type}) is not yet supported`
+      `This application type (${settings.application_type}) is not supported`
     );
     return;
   }
@@ -226,7 +227,9 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     const gcc = new GCC();
     out.appendLine("");
     out.appendLine("");
-    out.appendLine("Building " + projectName + " project");
+    out.appendLine(
+      "Building " + projectName + " project in " + settings.build + " mode"
+    );
     out.appendLine(
       "Starting compilation using g++ for " + files_.length + " files"
     );
@@ -246,7 +249,7 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     const clang = new CLANG();
     out.appendLine("");
     out.appendLine("");
-    out.appendLine("Building " + projectName + " project");
+    "Building " + projectName + " project in " + settings.build + " mode";
     out.appendLine(
       "Starting compilation using clang++ " + files_.length + " files"
     );
