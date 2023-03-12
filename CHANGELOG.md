@@ -1,5 +1,9 @@
 # Change Log
 
+## [Update 1.3.3]
+
+    - Updated the readme . Added videos and better explanations
+
 ## [Update 1.3.0]
 
     - Added multithreaded compilation. All your files compile at the same time.
