@@ -83,24 +83,16 @@ function activate(context) {
       const res = await askUser();
 
       if (res === 0) {
-        verifyFolderStructue(workspace.description);
-        const settings = readFile(
-          path.join(workspace.description, "build/config/setting.yml")
-        );
+        const path_ = foundWorkspaces.find(
+          (item) => item.name === chosenWorkspace
+        ).uri.fsPath;
+        verifyFolderStructue(path_);
+        const settings = readFile(path.join(path_, "build/config/setting.yml"));
         if (
-          fs.existsSync(
-            path.join(
-              workspace.description,
-              "build/out/" + settings.name + ".exe"
-            )
-          )
+          fs.existsSync(path.join(path_, "build/out/" + settings.name + ".exe"))
         ) {
           const response = await executeCommand(
-            "start " +
-              path.join(
-                workspace.description,
-                "build/out/" + settings.name + ".exe"
-              )
+            "start " + path.join(path_, "build/out/" + settings.name + ".exe")
           );
         } else {
           vscode.window.showWarningMessage(

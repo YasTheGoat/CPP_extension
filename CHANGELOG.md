@@ -1,5 +1,13 @@
 # Change Log
 
+## [Update 1.4.0]
+
+    - Fixed the command 'CPP_ : Run project'
+
+## [Update 1.3.9]
+
+    - Fixed with the debugger where the breakpoints would be ignored.
+
 ## [Update 1.3.5]
 
     - Fixed typoes in the readme file
