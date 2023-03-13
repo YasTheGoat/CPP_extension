@@ -72,7 +72,7 @@ class GCC {
     } else if (app_type.toUpperCase() === "DLL") {
       command = `g++ ${version} -shared -o ${origin}/build/out/${name}.dll ${origin}/build/obj/*.o -Wl,--out-implib,${origin}/build/out/lib${name}.a ${dependencies} ${librarys}`;
     } else if (app_type.toUpperCase() === "SLIB") {
-      command = `ar rcs ${origin}/build/out/lib${name}.a ${origin}/build/obj/*.o ${dependencies} ${librarys}`;
+      command = `ar rcs ${origin}/build/out/lib${name}.a ${origin}/build/obj/*.o`;
     }
     const response = await executeCommand(command);
 
@@ -153,7 +153,7 @@ class CLANG {
     } else if (app_type.toUpperCase() === "DLL") {
       command = `clang++ ${version} -shared -o ${origin}/build/out/${name}.dll ${origin}/build/obj/*.o -Wl,--out-implib,${origin}/build/out/lib${name}.a ${dependencies} ${librarys}`;
     } else if (app_type.toUpperCase() === "SLIB") {
-      command = `ar rcs ${origin}/build/out/lib${name}.a ${origin}/build/obj/*.o ${dependencies} ${librarys}`;
+      command = `ar rcs ${origin}/build/out/lib${name}.a ${origin}/build/obj/*.o`;
     }
 
     const response = await executeCommand(command);

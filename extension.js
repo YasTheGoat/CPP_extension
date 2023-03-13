@@ -86,6 +86,7 @@ function activate(context) {
         const path_ = foundWorkspaces.find(
           (item) => item.name === chosenWorkspace
         ).uri.fsPath;
+
         verifyFolderStructue(path_);
         const settings = readFile(path.join(path_, "build/config/setting.yml"));
         if (
@@ -96,7 +97,7 @@ function activate(context) {
           );
         } else {
           vscode.window.showWarningMessage(
-            "No exectubale file was found for " + workspace.label.toUpperCase()
+            "No exectubale file was found for " + chosenWorkspace.toUpperCase()
           );
         }
       }

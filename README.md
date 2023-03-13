@@ -14,7 +14,7 @@ You can specify an application type. It can either be an executable, a dynamic l
 >
 > > - Debug exposes the code to the gdb debugger and enables debugging features such as breakpoint and others.
 > >
-> > - Release mode optimizes and and reduces your application size when possible. This mode should only be used when the project is ready to be published
+> > - Release mode optimizes and reduces your application size when possible. This mode should only be used when the project is ready to be published
 
 <br>
 One of the best features is the compilation history. It's a file that allows CPP extension to decide wich file to compile and which file not to compile making the build time faster.<br>
