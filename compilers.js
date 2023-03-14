@@ -121,10 +121,12 @@ class CLANG {
       "",
       "Building " + projectName + " project in " + settings.build + " mode",
       "Starting compilation for " + files.length + " files",
+      "",
     ];
     files.forEach((file) => {
-      lines.push("Compiling " + file.split("\\").at(-1) + " - In Progess");
+      lines.push("Compiling (" + file.split("\\").at(-1) + ") - in progess");
     });
+    lines.push("");
     showInterface(lines);
     await Promise.all(
       files.map(async (file, index) => {
@@ -132,11 +134,12 @@ class CLANG {
 
         if (res !== 0) {
           msg.push([res, file.split("\\").at(-1)]);
-          lines[index + 4] =
-            "Compiling " + file.split("\\").at(-1) + " - Error";
+          lines[index + 5] =
+            "Compiling (" + file.split("\\").at(-1) + ") - error";
         } else {
           updatehistory(file, origin);
-          lines[index + 4] = "Compiling " + file.split("\\").at(-1) + " - Done";
+          lines[index + 5] =
+            "Compiling (" + file.split("\\").at(-1) + ") - done";
         }
 
         showInterface(lines);
@@ -170,7 +173,7 @@ class CLANG {
       origin
     );
     const optimization =
-      build.toUpperCase() === "DEBUG" ? "-00 -g" : "-02 -s -DNDEBUG";
+      build.toUpperCase() === "DEBUG" ? "-O0 -g" : "-O3 -DNDEBUG";
 
     const splitPath = file.split("\\");
     const fileName = splitPath.at(-1);
