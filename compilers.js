@@ -4,27 +4,54 @@ const path = require("path");
 const fs = require("fs");
 const { modifyFile } = require("./ymlFilesManager");
 const vscode = require("vscode");
-
+const showInterface = (lines) => {
+  out.clear();
+  lines.forEach((line) => {
+    out.appendLine(line);
+  });
+};
 class GCC {
   async run(settings, files, origin) {
     var msg = [];
-
+    var projectName = origin.split("\\").at(-1).toUpperCase();
+    let lines = [
+      "",
+      "",
+      "Building " + projectName + " project in " + settings.build + " mode",
+      "Starting compilation for " + files.length + " files",
+      "",
+    ];
+    files.forEach((file) => {
+      lines.push("Compiling (" + file.split("\\").at(-1) + ") - in progess");
+    });
+    lines.push("");
+    showInterface(lines);
     await Promise.all(
-      files.map(async (file) => {
-        out.appendLine("Compiling " + file.split("\\").at(-1));
+      files.map(async (file, index) => {
         const res = await this.compile(settings, file, origin);
+
         if (res !== 0) {
           msg.push([res, file.split("\\").at(-1)]);
+          lines[index + 5] =
+            "Compiling (" + file.split("\\").at(-1) + ") - error";
         } else {
           updatehistory(file, origin);
+          lines[index + 5] =
+            "Compiling (" + file.split("\\").at(-1) + ") - done";
         }
+
+        showInterface(lines);
       })
     );
 
     if (msg.length > 0) {
       out.appendLine("");
       out.appendLine("");
-      out.appendLine(msg.length + " errors found");
+      out.appendLine(
+        msg.length === 1
+          ? msg.length + " error found"
+          : msg.length + " errors found"
+      );
       out.appendLine("");
       for (let i = 0; i < msg.length; i++) {
         out.appendLine("FILE : " + msg[i][1].toUpperCase());
@@ -88,23 +115,42 @@ class GCC {
 class CLANG {
   async run(settings, files, origin) {
     var msg = [];
-
+    var projectName = origin.split("\\").at(-1).toUpperCase();
+    let lines = [
+      "",
+      "",
+      "Building " + projectName + " project in " + settings.build + " mode",
+      "Starting compilation for " + files.length + " files",
+    ];
+    files.forEach((file) => {
+      lines.push("Compiling " + file.split("\\").at(-1) + " - In Progess");
+    });
+    showInterface(lines);
     await Promise.all(
-      files.map(async (file) => {
-        out.appendLine("Compiling " + file.split("\\").at(-1));
+      files.map(async (file, index) => {
         const res = await this.compile(settings, file, origin);
+
         if (res !== 0) {
           msg.push([res, file.split("\\").at(-1)]);
+          lines[index + 4] =
+            "Compiling " + file.split("\\").at(-1) + " - Error";
         } else {
           updatehistory(file, origin);
+          lines[index + 4] = "Compiling " + file.split("\\").at(-1) + " - Done";
         }
+
+        showInterface(lines);
       })
     );
 
     if (msg.length > 0) {
       out.appendLine("");
       out.appendLine("");
-      out.appendLine(msg.length + " errors found");
+      out.appendLine(
+        msg.length === 1
+          ? msg.length + " error found"
+          : msg.length + " errors found"
+      );
       out.appendLine("");
       for (let i = 0; i < msg.length; i++) {
         out.appendLine("FILE : " + msg[i][1].toUpperCase());
@@ -211,7 +257,7 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     vscode.window.showErrorMessage(
       `This application type (${settings.application_type}) is not supported`
     );
-    return;
+    return 1;
   }
   const files_ = filterFiles(settings, history, files, origin);
   const projectName = origin.split("\\").at(-1).toUpperCase();
@@ -223,48 +269,45 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     );
     return 0;
   }
+  const start = new Date();
   if (compiler === "g++") {
     const gcc = new GCC();
-    out.appendLine("");
-    out.appendLine("");
-    out.appendLine(
-      "Building " + projectName + " project in " + settings.build + " mode"
-    );
-    out.appendLine(
-      "Starting compilation using g++ for " + files_.length + " files"
-    );
     const res1 = await gcc.run(settings, files_, origin);
     if (res1 !== 0) {
       out.appendLine("Compilation failed. Aborting linking.");
       return 1;
     }
-    out.appendLine("Starting linking using g++");
+    out.appendLine("Starting linking");
     const res2 = await gcc.link(settings, origin);
     if (res2 !== 0) {
       out.appendLine("Linking failed.");
       return 1;
     }
-    out.appendLine("Successfully built the project. Check 'build/out'");
+    const end = new Date();
+    out.appendLine(
+      "Successfully built the project in " +
+        Math.abs(end - start) +
+        " ms . Check 'build/out'"
+    );
   } else if (compiler === "clang++") {
     const clang = new CLANG();
-    out.appendLine("");
-    out.appendLine("");
-    "Building " + projectName + " project in " + settings.build + " mode";
-    out.appendLine(
-      "Starting compilation using clang++ " + files_.length + " files"
-    );
     const res1 = await clang.run(settings, files_, origin);
     if (res1 !== 0) {
       out.appendLine("Compilation failed. Aborting linking.");
       return 1;
     }
-    out.appendLine("Starting linking using clang++");
+    out.appendLine("Starting linking");
     const res2 = await clang.link(settings, origin);
     if (res2 !== 0) {
       out.appendLine("Linking failed.");
       return 1;
     }
-    out.appendLine("Successfully built the project. Check 'build/out'");
+    const end = new Date();
+    out.appendLine(
+      "Successfully built the project in " +
+        Math.abs(end - start) +
+        " ms . Check 'build/out'"
+    );
   }
 
   return 0;
@@ -403,7 +446,9 @@ const updatehistory = (file, origin) => {
       const hpath = path.join(fileRootDir, hname);
       const hmTime = fs.statSync(hpath).mtime;
 
-      hFiles.push({ file: hpath, time: hmTime });
+      if (fs.existsSync(hpath)) {
+        hFiles.push({ file: hpath, time: hmTime });
+      }
     }
   });
 

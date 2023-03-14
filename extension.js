@@ -389,6 +389,10 @@ const run = async () => {
       }
     });
 
+    if (settings.application_type.toUpperCase() !== "EXE") {
+      return;
+    }
+
     if (
       fs.existsSync(
         path.join(folderPath, "build/out/" + settings.name + ".exe")

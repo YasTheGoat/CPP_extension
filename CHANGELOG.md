@@ -1,5 +1,11 @@
 # Change Log
 
+## [Update 1.4.3]
+
+    - Added a tracker for the file compilation
+    - Added the time it took at the end of the build
+    - Added colors to the outPut window
+
 ## [Update 1.4.0]
 
     - Fixed the command 'CPP_ : Run project'

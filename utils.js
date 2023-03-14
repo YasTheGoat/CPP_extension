@@ -6,7 +6,11 @@ const executeCommand = async (cmd) => {
     const { stdout, stderr } = await exec(cmd);
 
     if (stderr) {
-      return { res: 1, msg: stderr };
+      if (stderr.toUpperCase().includes("WARNING")) {
+        return { res: 0, msg: stderr };
+      } else {
+        return { res: 1, msg: stderr };
+      }
     }
 
     return { res: 0, msg: stdout };

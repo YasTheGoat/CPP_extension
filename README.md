@@ -21,6 +21,30 @@ One of the best features is the compilation history. It's a file that allows CPP
 And Finally, this extension compiles your files in parallel (asynchronously), which makes the build time even faster.<br>
 <br>
 
+# REQUIREMENTS <br>
+
+    You need a compiler added to the path in terminal. Can either be g++ or clang++.
+
+    if you want to add colors to the output, download Output Colorizer.
+
+<br>
+
+# SYNTAX <br>
+
+1: When including header files in your cpp files, please take note that the files that you expect to change in the future (your custom header files for example ) need to be surrounded
+by "filepath", while third party header files or just files that are complete need to be surrounded by <filepath>. This is very important since this extension uses the included files
+surrounded by "filepath" as well to determine if a cpp file should be compiled or not.
+
+<br>
+
+2: Your app name in the settings and your folder name needs to be attached, no space
+
+<br>
+
+3: The paths in the settings file needs to start from the root of your project.
+
+<br>
+
 # COMMANDS <br>
 
 <br>
