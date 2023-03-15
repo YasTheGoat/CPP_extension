@@ -10,6 +10,14 @@ const showInterface = (lines) => {
     out.appendLine(line);
   });
 };
+const getNameByPath = (path) => {
+  if (path.includes("\\")){
+    return path.split("\\").at(-1)
+  }
+  else if (path.includes("/")){
+    return path.split("/").at(-1)
+  }
+}
 class GCC {
   async run(settings, files, origin) {
     var msg = [];
