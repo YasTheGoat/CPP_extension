@@ -460,9 +460,9 @@ const updatehistory = (file, origin) => {
       }
 
       const hpath = path.join(fileRootDir, hname);
-      const hmTime = fs.statSync(hpath).mtime;
 
       if (fs.existsSync(hpath)) {
+        const hmTime = fs.statSync(hpath).mtime;
         hFiles.push({ file: hpath, time: hmTime });
       }
     }
