@@ -107,7 +107,7 @@ function activate(context) {
   let configureDis = vscode.commands.registerCommand(
     "CPP-Compiler.configure",
     async () => {
-      const res = await askUser();
+      const res = await askUser("config");
 
       if (res === 0) {
         const path_ = foundWorkspaces.find(
@@ -256,7 +256,7 @@ const setupStatusBar = async () => {
   statusBarMenuRerun.show();
 };
 
-const askUser = async () => {
+const askUser = async (type) => {
   chosenCompiler = null;
   chosenWorkspace = null;
   foundWorkspaces = await vscode.workspace.workspaceFolders;
@@ -268,22 +268,24 @@ const askUser = async () => {
     return 1;
   }
 
-  const foundCompilers = await findCompilers();
+  if (type !== "config") {
+    const foundCompilers = await findCompilers();
 
-  if (foundCompilers.length === 1) {
-    chosenCompiler = foundCompilers[0];
-  } else if (foundCompilers.length > 1) {
-    chosenCompiler = await vscode.window.showQuickPick(foundCompilers, {
-      matchOnDescription: false,
-      matchOnDetail: true,
-    });
-  }
+    if (foundCompilers.length === 1) {
+      chosenCompiler = foundCompilers[0];
+    } else if (foundCompilers.length > 1) {
+      chosenCompiler = await vscode.window.showQuickPick(foundCompilers, {
+        matchOnDescription: false,
+        matchOnDetail: true,
+      });
+    }
 
-  if (!chosenCompiler) {
-    vscode.window.showErrorMessage(
-      "No compatible compiler was found, Make sure to download g++ or llvm and add them to your environement variables"
-    );
-    return 1;
+    if (!chosenCompiler) {
+      vscode.window.showErrorMessage(
+        "No compatible compiler was found, Make sure to download g++ or llvm and add them to your environement variables"
+      );
+      return 1;
+    }
   }
 
   const workspacesChoices = [];

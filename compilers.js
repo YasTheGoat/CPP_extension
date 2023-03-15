@@ -11,17 +11,16 @@ const showInterface = (lines) => {
   });
 };
 const getNameByPath = (path) => {
-  if (path.includes("\\")){
-    return path.split("\\").at(-1)
+  if (path.includes("\\")) {
+    return path.split("\\").at(-1);
+  } else if (path.includes("/")) {
+    return path.split("/").at(-1);
   }
-  else if (path.includes("/")){
-    return path.split("/").at(-1)
-  }
-}
+};
 class GCC {
   async run(settings, files, origin) {
     var msg = [];
-    var projectName = origin.split("\\").at(-1).toUpperCase();
+    var projectName = getNameByPath(origin).toUpperCase();
     let lines = [
       "",
       "",
@@ -30,7 +29,7 @@ class GCC {
       "",
     ];
     files.forEach((file) => {
-      lines.push("Compiling (" + file.split("\\").at(-1) + ") - in progess");
+      lines.push("Compiling (" + getNameByPath(file) + ") - in progess");
     });
     lines.push("");
     showInterface(lines);
@@ -39,13 +38,11 @@ class GCC {
         const res = await this.compile(settings, file, origin);
 
         if (res !== 0) {
-          msg.push([res, file.split("\\").at(-1)]);
-          lines[index + 5] =
-            "Compiling (" + file.split("\\").at(-1) + ") - error";
+          msg.push([res, getNameByPath(file)]);
+          lines[index + 5] = "Compiling (" + getNameByPath(file) + ") - error";
         } else {
           updatehistory(file, origin);
-          lines[index + 5] =
-            "Compiling (" + file.split("\\").at(-1) + ") - done";
+          lines[index + 5] = "Compiling (" + getNameByPath(file) + ") - done";
         }
 
         showInterface(lines);
@@ -81,8 +78,7 @@ class GCC {
     const optimization =
       build.toUpperCase() === "DEBUG" ? "-O0 -g" : "-O3 -DNDEBUG";
 
-    const splitPath = file.split("\\");
-    const fileName = splitPath.at(-1);
+    const fileName = getNameByPath(file);
     const response = await executeCommand(
       `g++ ${optimization} ${version} ${preprocessors} ${includes} -c ${file} -o ${origin}/build/obj/${fileName}.o`
     );
@@ -100,7 +96,7 @@ class GCC {
       origin
     );
 
-    origin.replace("\\", "/");
+    // origin.replace("\\", "/");
     var command = "";
     if (app_type.toUpperCase() === "EXE") {
       command = `g++ ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
@@ -123,7 +119,7 @@ class GCC {
 class CLANG {
   async run(settings, files, origin) {
     var msg = [];
-    var projectName = origin.split("\\").at(-1).toUpperCase();
+    var projectName = getNameByPath(origin).toUpperCase();
     let lines = [
       "",
       "",
@@ -132,7 +128,7 @@ class CLANG {
       "",
     ];
     files.forEach((file) => {
-      lines.push("Compiling (" + file.split("\\").at(-1) + ") - in progess");
+      lines.push("Compiling (" + getNameByPath(file) + ") - in progess");
     });
     lines.push("");
     showInterface(lines);
@@ -141,13 +137,11 @@ class CLANG {
         const res = await this.compile(settings, file, origin);
 
         if (res !== 0) {
-          msg.push([res, file.split("\\").at(-1)]);
-          lines[index + 5] =
-            "Compiling (" + file.split("\\").at(-1) + ") - error";
+          msg.push([res, getNameByPath(file)]);
+          lines[index + 5] = "Compiling (" + getNameByPath(file) + ") - error";
         } else {
           updatehistory(file, origin);
-          lines[index + 5] =
-            "Compiling (" + file.split("\\").at(-1) + ") - done";
+          lines[index + 5] = "Compiling (" + getNameByPath(file) + ") - done";
         }
 
         showInterface(lines);
@@ -183,8 +177,7 @@ class CLANG {
     const optimization =
       build.toUpperCase() === "DEBUG" ? "-O0 -g" : "-O3 -DNDEBUG";
 
-    const splitPath = file.split("\\");
-    const fileName = splitPath.at(-1);
+    const fileName = getNameByPath(file);
     const response = await executeCommand(
       `clang++ ${optimization} ${version} ${preprocessors} ${includes} -c ${file} -o ${origin}/build/obj/${fileName}.o`
     );
@@ -203,7 +196,7 @@ class CLANG {
     );
 
     // result = os.system(f'cmd /c"{compiler} {build_parameter} -g --std=c++{cpp_version} bin\\obj\\{DirPath}\\*.o -o bin\\build\\{app_name} {libs} {dependencies}"')
-    origin.replace("\\", "/");
+    // origin.replace("\\", "/");
     var command = "";
     if (app_type.toUpperCase() === "EXE") {
       command = `clang++ ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
@@ -271,7 +264,7 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     return 1;
   }
   const files_ = filterFiles(settings, history, files, origin);
-  const projectName = origin.split("\\").at(-1).toUpperCase();
+  const projectName = getNameByPath(origin).toUpperCase();
   if (files_.length === 0) {
     out.appendLine(
       "All files in " +
@@ -358,7 +351,7 @@ const filterFiles = (settings, history, files, origin) => {
     const objName = objFiles[i];
     var found = false;
     for (let b = 0; b < files.length; b++) {
-      const fileName = files[b].split("\\").at(-1);
+      const fileName = getNameByPath(files[b]);
       if (objName === fileName + ".o" && !ignores.includes(files[b])) {
         found = true;
         break;
@@ -444,15 +437,27 @@ const updatehistory = (file, origin) => {
   var hFiles = [];
 
   data.split(/\r?\n/).forEach((line) => {
-    if (line.includes("#include") && line.includes('"')) {
+    if (line.includes("#include")) {
       var fileRootDir = "";
-      const splitPath = file.split("\\");
+      var splitPath = [];
+      if (file.includes("\\")) {
+        splitPath = file.split("\\");
+      } else if (file.includes("/")) {
+        splitPath = file.split("/");
+      }
       splitPath.forEach((word, index) => {
         if (index !== splitPath.length - 1) {
           fileRootDir += word + "/";
         }
       });
-      const hname = line.split('"')[1].split('"')[0];
+
+      var hname = "";
+
+      if (line.includes('"')) {
+        hname = line.split('"')[1].split('"')[0];
+      } else if (line.includes("<")) {
+        hname = line.split("<")[1].split(">")[0];
+      }
 
       const hpath = path.join(fileRootDir, hname);
       const hmTime = fs.statSync(hpath).mtime;
