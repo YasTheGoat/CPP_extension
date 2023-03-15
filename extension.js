@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require("vscode");
+const os = require("os");
 const fs = require("fs");
 const path = require("path");
 const { compileFiles } = require("./compilers");
@@ -362,10 +363,10 @@ const run = async () => {
 
   if (res === 0) {
     var ressources = [];
-    settings.ressources.forEach((res) => {
-      if (res !== "exemple") {
-        const resName = res.split("\\").at(-1);
-        const resPath = path.join(folderPath, res);
+    settings.ressources.forEach((res_) => {
+      if (res_ !== "exemple") {
+        const resName = res_.split("\\").at(-1);
+        const resPath = path.join(folderPath, res_);
         const outPath = path.join(folderPath, "build/out/" + resName);
         if (fs.existsSync(outPath) && !fs.statSync(outPath).isDirectory()) {
           const resmTime = fs.statSync(resPath).mtime;
@@ -378,10 +379,10 @@ const run = async () => {
         }
       }
     });
-    ressources.forEach((res) => {
-      const resName = res.split("\\").at(-1);
+    ressources.forEach((res_) => {
+      const resName = res_.split("\\").at(-1);
       try {
-        fse.copySync(res, path.join(folderPath, "build/out/" + resName), {
+        fse.copySync(res_, path.join(folderPath, "build/out/" + resName), {
           overwrite: true,
         });
       } catch (err) {
@@ -398,9 +399,13 @@ const run = async () => {
     if (
       fs.existsSync(
         path.join(folderPath, "build/out/" + settings.name + ".exe")
-      )
+      ) ||
+      fs.existsSync(path.join(folderPath, "build/out/" + settings.name))
     ) {
-      if (settings.build.toUpperCase() === "DEBUG") {
+      if (
+        settings.build.toUpperCase() === "DEBUG" &&
+        os.platform() !== "linux"
+      ) {
         const config = vscode.workspace.getConfiguration("launch", workspace);
         var curr = [];
         const data = {
@@ -409,7 +414,7 @@ const run = async () => {
           request: "launch",
           externalConsole: true,
           cwd: folderPath,
-          program: path.join(folderPath, "build/out/" + settings.name + ".exe"),
+          program: path.join(folderPath, "build/out/" + settings.name),
           args: [],
           // "stopAtEntry": false,
           // "environment": [],
@@ -435,14 +440,13 @@ const run = async () => {
         );
       } else {
         const response = await executeCommand(
-          "start " +
-            path.join(folderPath, "build/out/" + settings.name + ".exe")
+          "start" + " " + path.join(folderPath, "build/out/" + settings.name)
         );
       }
     } else {
       const name = folderPath.split("\\").at(-1);
       vscode.window.showWarningMessage(
-        "No exectubale file was found for " + name.toUpperCase()
+        "No runnable file was found for " + name.toUpperCase()
       );
     }
   }
