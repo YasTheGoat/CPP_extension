@@ -23,7 +23,7 @@ And Finally, this extension compiles your files in parallel (asynchronously), wh
 
 # REQUIREMENTS <br>
 
-    You need a compiler added to the path in terminal. Can either be g++ or clang++.
+    You need a compiler added to the path in terminal. Can either be g++ or clang++. If you decide to use clang++, you need to have msvc installed on windows.
 
     if you want to add colors to the output, download Output Colorizer.
 

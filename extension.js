@@ -272,7 +272,7 @@ const askUser = async () => {
 
   if (foundCompilers.length === 1) {
     chosenCompiler = foundCompilers[0];
-  } else if (compilers.length > 1) {
+  } else if (foundCompilers.length > 1) {
     chosenCompiler = await vscode.window.showQuickPick(foundCompilers, {
       matchOnDescription: false,
       matchOnDetail: true,
