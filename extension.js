@@ -21,7 +21,7 @@ const fse = require("fs-extra");
  * @param {vscode.ExtensionContext} context
  */
 
-const supportedCompilers = ["g++", "clang++"];
+const supportedCompilers = ["g++", "clang++", "gcc", "clang"];
 var foundCompilers = [];
 var foundWorkspaces = [];
 var chosenCompiler;
@@ -348,7 +348,7 @@ const run = async () => {
   findRelevantFiles(folderPath, "cpp");
   if (cppFiles.length === 0) {
     vscode.window.showWarningMessage(
-      "There are no files ending in '.cpp' to compile"
+      "There are no files ending in '.cpp' or '.c' to compile"
     );
     return;
   }
@@ -468,7 +468,7 @@ const findCompilers = async () => {
   return final;
 };
 
-const findRelevantFiles = (startPath, filter) => {
+const findRelevantFiles = (startPath) => {
   if (!fs.existsSync(startPath)) {
     console.log("no dir ", startPath);
     return;
@@ -478,8 +478,8 @@ const findRelevantFiles = (startPath, filter) => {
     var filename = path.join(startPath, files[i]);
     var stat = fs.statSync(filename);
     if (stat.isDirectory()) {
-      findRelevantFiles(filename, filter); //recurse
-    } else if (filename.endsWith(filter)) {
+      findRelevantFiles(filename); //recurse
+    } else if (filename.endsWith("cpp") || filename.endsWith("c")) {
       cppFiles.push(filename);
     }
   }

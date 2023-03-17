@@ -17,14 +17,19 @@ const getNameByPath = (path) => {
     return path.split("/").at(-1);
   }
 };
-class GCC {
-  async run(settings, files, origin) {
+class COMPILER {
+  async run(settings, files, origin, compiler) {
     var msg = [];
     var projectName = getNameByPath(origin).toUpperCase();
     let lines = [
       "",
       "",
-      "Building " + projectName + " project in " + settings.build + " mode",
+      "Building " +
+        projectName +
+        " project in " +
+        settings.build +
+        " mode with " +
+        compiler,
       "Starting compilation for " + files.length + " files",
       "",
     ];
@@ -35,7 +40,7 @@ class GCC {
     showInterface(lines);
     await Promise.all(
       files.map(async (file, index) => {
-        const res = await this.compile(settings, file, origin);
+        const res = await this.compile(settings, file, origin, compiler);
 
         if (res !== 0) {
           msg.push([res, getNameByPath(file)]);
@@ -70,7 +75,7 @@ class GCC {
     }
   }
 
-  async compile(settings, file, origin) {
+  async compile(settings, file, origin, compiler) {
     const { version, includes, preprocessors, build } = setupSettings(
       settings,
       origin
@@ -80,7 +85,7 @@ class GCC {
 
     const fileName = getNameByPath(file);
     const response = await executeCommand(
-      `g++ ${optimization} ${version} ${preprocessors} ${includes} -c ${file} -o ${origin}/build/obj/${fileName}.o`
+      `${compiler} ${optimization} ${version} ${preprocessors} ${includes} -c ${file} -o ${origin}/build/obj/${fileName}.o`
     );
     origin.replace("\\", "/");
     if (response.res !== 0) {
@@ -90,7 +95,7 @@ class GCC {
     }
   }
 
-  async link(settings, origin) {
+  async link(settings, origin, compiler) {
     const { name, app_type, version, dependencies, librarys } = setupSettings(
       settings,
       origin
@@ -99,9 +104,9 @@ class GCC {
     // origin.replace("\\", "/");
     var command = "";
     if (app_type.toUpperCase() === "EXE") {
-      command = `g++ ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
+      command = `${compiler} ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
     } else if (app_type.toUpperCase() === "DLL") {
-      command = `g++ ${version} -shared -o ${origin}/build/out/${name}.dll ${origin}/build/obj/*.o -Wl,--out-implib,${origin}/build/out/lib${name}.a ${dependencies} ${librarys}`;
+      command = `${compiler} ${version} -shared -o ${origin}/build/out/${name}.dll ${origin}/build/obj/*.o -Wl,--out-implib,${origin}/build/out/lib${name}.a ${dependencies} ${librarys}`;
     } else if (app_type.toUpperCase() === "SLIB") {
       command = `ar rcs ${origin}/build/out/lib${name}.a ${origin}/build/obj/*.o`;
     }
@@ -115,108 +120,6 @@ class GCC {
     }
   }
 }
-
-class CLANG {
-  async run(settings, files, origin) {
-    var msg = [];
-    var projectName = getNameByPath(origin).toUpperCase();
-    let lines = [
-      "",
-      "",
-      "Building " + projectName + " project in " + settings.build + " mode",
-      "Starting compilation for " + files.length + " files",
-      "",
-    ];
-    files.forEach((file) => {
-      lines.push("Compiling (" + getNameByPath(file) + ") - in progess");
-    });
-    lines.push("");
-    showInterface(lines);
-    await Promise.all(
-      files.map(async (file, index) => {
-        const res = await this.compile(settings, file, origin);
-
-        if (res !== 0) {
-          msg.push([res, getNameByPath(file)]);
-          lines[index + 5] = "Compiling (" + getNameByPath(file) + ") - error";
-        } else {
-          updatehistory(file, origin);
-          lines[index + 5] = "Compiling (" + getNameByPath(file) + ") - done";
-        }
-
-        showInterface(lines);
-      })
-    );
-
-    if (msg.length > 0) {
-      out.appendLine("");
-      out.appendLine("");
-      out.appendLine(
-        msg.length === 1
-          ? msg.length + " error found"
-          : msg.length + " errors found"
-      );
-      out.appendLine("");
-      for (let i = 0; i < msg.length; i++) {
-        out.appendLine("FILE : " + msg[i][1].toUpperCase());
-        out.appendLine(msg[i]);
-        out.appendLine("");
-        out.appendLine("");
-      }
-      return 1;
-    } else {
-      return 0;
-    }
-  }
-
-  async compile(settings, file, origin) {
-    const { version, includes, preprocessors, build } = setupSettings(
-      settings,
-      origin
-    );
-    const optimization =
-      build.toUpperCase() === "DEBUG" ? "-O0 -g" : "-O3 -DNDEBUG";
-
-    const fileName = getNameByPath(file);
-    const response = await executeCommand(
-      `clang++ ${optimization} ${version} ${preprocessors} ${includes} -c ${file} -o ${origin}/build/obj/${fileName}.o`
-    );
-    origin.replace("\\", "/");
-    if (response.res !== 0) {
-      return response.msg;
-    } else {
-      return 0;
-    }
-  }
-
-  async link(settings, origin) {
-    const { name, app_type, version, dependencies, librarys } = setupSettings(
-      settings,
-      origin
-    );
-
-    // result = os.system(f'cmd /c"{compiler} {build_parameter} -g --std=c++{cpp_version} bin\\obj\\{DirPath}\\*.o -o bin\\build\\{app_name} {libs} {dependencies}"')
-    // origin.replace("\\", "/");
-    var command = "";
-    if (app_type.toUpperCase() === "EXE") {
-      command = `clang++ ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
-    } else if (app_type.toUpperCase() === "DLL") {
-      command = `clang++ ${version} -shared -o ${origin}/build/out/${name}.dll ${origin}/build/obj/*.o -Wl,--out-implib,${origin}/build/out/lib${name}.a ${dependencies} ${librarys}`;
-    } else if (app_type.toUpperCase() === "SLIB") {
-      command = `ar rcs ${origin}/build/out/lib${name}.a ${origin}/build/obj/*.o`;
-    }
-
-    const response = await executeCommand(command);
-
-    if (response.res !== 0) {
-      out.appendLine(response.msg);
-      return 1;
-    } else {
-      return 0;
-    }
-  }
-}
-
 const setupSettings = (settings, origin) => {
   const version =
     settings.cpp_version === "auto" ? "" : "--std=c++" + settings.cpp_version;
@@ -274,45 +177,25 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     return 0;
   }
   const start = new Date();
-  if (compiler === "g++") {
-    const gcc = new GCC();
-    const res1 = await gcc.run(settings, files_, origin);
-    if (res1 !== 0) {
-      out.appendLine("Compilation failed. Aborting linking.");
-      return 1;
-    }
-    out.appendLine("Starting linking");
-    const res2 = await gcc.link(settings, origin);
-    if (res2 !== 0) {
-      out.appendLine("Linking failed.");
-      return 1;
-    }
-    const end = new Date();
-    out.appendLine(
-      "Successfully built the project in " +
-        Math.abs(end - start) +
-        " ms . Check 'build/out'"
-    );
-  } else if (compiler === "clang++") {
-    const clang = new CLANG();
-    const res1 = await clang.run(settings, files_, origin);
-    if (res1 !== 0) {
-      out.appendLine("Compilation failed. Aborting linking.");
-      return 1;
-    }
-    out.appendLine("Starting linking");
-    const res2 = await clang.link(settings, origin);
-    if (res2 !== 0) {
-      out.appendLine("Linking failed.");
-      return 1;
-    }
-    const end = new Date();
-    out.appendLine(
-      "Successfully built the project in " +
-        Math.abs(end - start) +
-        " ms . Check 'build/out'"
-    );
+
+  const comp = new COMPILER();
+  const res1 = await comp.run(settings, files_, origin, compiler);
+  if (res1 !== 0) {
+    out.appendLine("Compilation failed. Aborting linking.");
+    return 1;
   }
+  out.appendLine("Starting linking");
+  const res2 = await comp.link(settings, origin, compiler);
+  if (res2 !== 0) {
+    out.appendLine("Linking failed.");
+    return 1;
+  }
+  const end = new Date();
+  out.appendLine(
+    "Successfully built the project in " +
+      Math.abs(end - start) +
+      " ms . Check 'build/out'"
+  );
 
   return 0;
 };

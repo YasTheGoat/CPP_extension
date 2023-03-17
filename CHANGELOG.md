@@ -1,5 +1,12 @@
 # Change Log
 
+## [Update 1.4.6]
+
+    - Now the extension should work on linux and mac
+    but unfortnately, the debugging features are not
+    available for now. The executable also won't run
+    automatically.
+
 ## [Update 1.4.3]
 
     - Added a tracker for the file compilation
