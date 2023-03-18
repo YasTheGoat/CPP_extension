@@ -5,7 +5,7 @@ const os = require("os");
 const fs = require("fs");
 const path = require("path");
 const { compileFiles } = require("./compilers");
-const { executeCommand } = require("./utils.js");
+const { executeCommand, getNameByPath } = require("./utils.js");
 const {
   SettingsTemplate,
   readFile,
@@ -359,22 +359,14 @@ const run = async () => {
     var ressources = [];
     settings.ressources.forEach((res_) => {
       if (res_ !== "exemple") {
-        const resName = res_.split("\\").at(-1);
         const resPath = path.join(folderPath, res_);
-        const outPath = path.join(folderPath, "build/out/" + resName);
-        if (fs.existsSync(outPath) && !fs.statSync(outPath).isDirectory()) {
-          const resmTime = fs.statSync(resPath).mtime;
-          const outmTime = fs.statSync(outPath).mtime;
-          if (resmTime > outmTime) {
-            ressources.push(resPath);
-          }
-        } else {
+        if (fs.existsSync(resPath)) {
           ressources.push(resPath);
         }
       }
     });
     ressources.forEach((res_) => {
-      const resName = res_.split("\\").at(-1);
+      const resName = getNameByPath(res_);
       try {
         fse.copySync(res_, path.join(folderPath, "build/out/" + resName), {
           overwrite: true,
@@ -438,7 +430,7 @@ const run = async () => {
         );
       }
     } else {
-      const name = folderPath.split("\\").at(-1);
+      const name = getNameByPath(folderPath);
       vscode.window.showWarningMessage(
         "No runnable file was found for " + name.toUpperCase()
       );

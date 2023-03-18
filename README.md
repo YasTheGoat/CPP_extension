@@ -1,10 +1,10 @@
-Welcome to my CPP extension ! 🚀🚀<br>
+Welcome to my CPP and extension ! 🚀🚀<br>
 <br>
 
 # INFO <br>
 
 <br>
-This extension allows you to build your cpp projects. Your project can contain an infinite amount of files and my extension will automatically find them all.<br>
+This extension allows you to build your cpp or c projects. Your project can contain an infinite amount of files and my extension will automatically find them all.<br>
 You can add include paths, librarys paths, librarys names, preprocessors, and ignore paths which will be ignored in the build.<br>
 You can specify an application type. It can either be an executable, a dynamic library or a static library (exe, dll, slib). Dll only works with g++!
 <br>
@@ -17,7 +17,7 @@ You can specify an application type. It can either be an executable, a dynamic l
 > > - Release mode optimizes and reduces your application size when possible. This mode should only be used when the project is ready to be published
 
 <br>
-One of the best features is the compilation history. It's a file that allows CPP extension to decide wich file to compile and which file not to compile making the build time faster.<br>
+One of the best features is the compilation history. It's a file that allows this extension to decide wich file to compile and which file not to compile making the build time faster.<br>
 And Finally, this extension compiles your files in parallel (asynchronously), which makes the build time even faster.<br>
 <br>
 
@@ -32,8 +32,8 @@ And Finally, this extension compiles your files in parallel (asynchronously), wh
 # SYNTAX <br>
 
 1: When including header files in your cpp files, please take note that the files that you expect to change in the future (your custom header files for example ) need to be surrounded
-by "filepath", while third party header files or just files that are complete need to be surrounded by <filepath>. This is very important since this extension uses the included files
-surrounded by "filepath" as well to determine if a cpp file should be compiled or not.
+by ' " " ', while third party header files or just files that are complete need to be surrounded by ' < > '. This is very important since this extension uses the included files
+surrounded by ' " " ' as well to determine if a cpp file should be compiled or not.
 
 <br>
 

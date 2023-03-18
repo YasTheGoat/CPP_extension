@@ -19,4 +19,12 @@ const executeCommand = async (cmd) => {
   }
 };
 
-module.exports = { executeCommand };
+const getNameByPath = (path) => {
+  if (path.includes("\\")) {
+    return path.split("\\").at(-1);
+  } else if (path.includes("/")) {
+    return path.split("/").at(-1);
+  }
+};
+
+module.exports = { executeCommand, getNameByPath };

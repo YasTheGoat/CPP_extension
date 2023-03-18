@@ -8,8 +8,8 @@
     "color": "#000000",
     "theme": "dark"
   },
-  "description": "An extension for compiling CPP annd C projects. Supports debug and release mode with as many CPP or C files as you want",
-  "version": "1.4.7",
+  "description": "An extension for compiling CPP and C projects. Supports debug and release mode with as many CPP or C files as you want",
+  "version": "1.5.0",
   "engines": {
     "vscode": "^1.75.0"
   },

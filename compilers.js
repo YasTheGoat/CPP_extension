@@ -1,4 +1,4 @@
-const { executeCommand } = require("./utils.js");
+const { executeCommand, getNameByPath } = require("./utils.js");
 const { out } = require("./channels.js");
 const path = require("path");
 const fs = require("fs");
@@ -10,15 +10,12 @@ const showInterface = (lines) => {
     out.appendLine(line);
   });
 };
-const getNameByPath = (path) => {
-  if (path.includes("\\")) {
-    return path.split("\\").at(-1);
-  } else if (path.includes("/")) {
-    return path.split("/").at(-1);
-  }
-};
+
+var filesToUpdate = [];
+
 class COMPILER {
   async run(settings, files, origin, compiler) {
+    filesToUpdate = [];
     var msg = [];
     var projectName = getNameByPath(origin).toUpperCase();
     let lines = [
@@ -46,7 +43,7 @@ class COMPILER {
           msg.push([res, getNameByPath(file)]);
           lines[index + 5] = "Compiling (" + getNameByPath(file) + ") - error";
         } else {
-          updatehistory(file, origin);
+          filesToUpdate.push([file, origin]);
           lines[index + 5] = "Compiling (" + getNameByPath(file) + ") - done";
         }
 
@@ -205,6 +202,10 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
       Math.abs(end - start) +
       " ms . Check 'build/out'"
   );
+
+  filesToUpdate.forEach((update) => {
+    updatehistory(update[0], update[1]);
+  });
 
   return 0;
 };
