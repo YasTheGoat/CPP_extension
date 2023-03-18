@@ -8,8 +8,8 @@
     "color": "#000000",
     "theme": "dark"
   },
-  "description": "An extension for compiling cpp projects. Supports debug and release mode with as many cpp files as you want",
-  "version": "1.4.6",
+  "description": "An extension for compiling CPP annd C projects. Supports debug and release mode with as many CPP or C files as you want",
+  "version": "1.4.7",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -24,9 +24,14 @@
     "compile",
     "compiler",
     "c++",
+    "c",
+    "gcc",
+    "clang++",
+    "clang",
     "programming",
     "debugger",
     "g++",
+    "gcc",
     "gdb",
     "hpp",
     "h"

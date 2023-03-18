@@ -6,7 +6,7 @@ Welcome to my CPP extension ! 🚀🚀<br>
 <br>
 This extension allows you to build your cpp projects. Your project can contain an infinite amount of files and my extension will automatically find them all.<br>
 You can add include paths, librarys paths, librarys names, preprocessors, and ignore paths which will be ignored in the build.<br>
-You can specify an application type. It can either be an executable, a dynamic library or a static library (exe, dll, slib)
+You can specify an application type. It can either be an executable, a dynamic library or a static library (exe, dll, slib). Dll only works with g++!
 <br>
 <br>
 

@@ -35,14 +35,15 @@ var statusBarMenuWorkspace;
 var statusBarMenuRun;
 var statusBarMenuRerun;
 
-function activate(context) {
+async function activate(context) {
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
 
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with  registerCommand
   // The commandId parameter must match the command field in package.json
-
+  foundCompilers = await findCompilers();
+  foundWorkspaces = await vscode.workspace.workspaceFolders;
   //STATUS BAR
   statusBarMenuCompiler = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Left,
@@ -108,6 +109,7 @@ function activate(context) {
   let configureDis = vscode.commands.registerCommand(
     "CPP-Compiler.configure",
     async () => {
+      foundWorkspaces = await vscode.workspace.workspaceFolders;
       const res = await askUser("config");
 
       if (res === 0) {
@@ -134,7 +136,6 @@ function activate(context) {
   let toggleCompilerStatusbar = vscode.commands.registerCommand(
     "CPP-Compiler.togglecompiler",
     async () => {
-      foundCompilers = await findCompilers();
       const currCompiler = statusBarMenuCompiler.text;
       if (foundCompilers.length > 0) {
         if (foundCompilers.length === 1) {
@@ -153,7 +154,6 @@ function activate(context) {
   let toggleWorkspaceStatusbar = vscode.commands.registerCommand(
     "CPP-Compiler.toggleworkspace",
     async () => {
-      foundWorkspaces = await vscode.workspace.workspaceFolders;
       const currWorkspace = statusBarMenuWorkspace.text;
       if (foundWorkspaces.length > 0) {
         if (foundWorkspaces.length === 1) {
@@ -229,9 +229,6 @@ function activate(context) {
 }
 
 const setupStatusBar = async () => {
-  foundCompilers = await findCompilers();
-  foundWorkspaces = await vscode.workspace.workspaceFolders;
-
   compiler = foundCompilers.length > 0 ? foundCompilers[0] : "none";
   workspace = foundWorkspaces.length > 0 ? foundWorkspaces[0].name : "none";
 
@@ -260,7 +257,6 @@ const setupStatusBar = async () => {
 const askUser = async (type) => {
   chosenCompiler = null;
   chosenWorkspace = null;
-  foundWorkspaces = await vscode.workspace.workspaceFolders;
 
   if (!foundWorkspaces) {
     vscode.window.showErrorMessage(
@@ -270,8 +266,6 @@ const askUser = async (type) => {
   }
 
   if (type !== "config") {
-    const foundCompilers = await findCompilers();
-
     if (foundCompilers.length === 1) {
       chosenCompiler = foundCompilers[0];
     } else if (foundCompilers.length > 1) {

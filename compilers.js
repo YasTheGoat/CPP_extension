@@ -166,6 +166,15 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     );
     return 1;
   }
+
+  if (compiler === "clang" || compiler === "clang++") {
+    if (settings.application_type.toUpperCase() === "DLL") {
+      vscode.window.showErrorMessage(
+        `DLL application type is only supported with g++. Please switch compiler to continue!`
+      );
+      return 1;
+    }
+  }
   const files_ = filterFiles(settings, history, files, origin);
   const projectName = getNameByPath(origin).toUpperCase();
   if (files_.length === 0) {

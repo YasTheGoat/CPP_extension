@@ -1,5 +1,10 @@
 # Change Log
 
+## [Update 1.4.7]
+
+    - Added support for c language
+    - You need to switch to gcc or clang instead of g++ or clang++ to compile c projects
+
 ## [Update 1.4.6]
 
     - Now the extension should work on linux and mac
