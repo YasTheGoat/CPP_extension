@@ -5,7 +5,7 @@ const SettingsTemplate = `name: "app"       #Do not put any space in the name
 application_type: "exe"                     # exe, dll, or slib
 cpp_version: "auto" 
 build: "Debug"                              #Debug or Release
-\n
+showSteps: true
 include:
     - exemple
 library_directory:

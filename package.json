@@ -9,7 +9,7 @@
     "theme": "dark"
   },
   "description": "An extension for compiling CPP and C projects. Supports debug and release mode with as many CPP or C files as you want",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "engines": {
     "vscode": "^1.75.0"
   },

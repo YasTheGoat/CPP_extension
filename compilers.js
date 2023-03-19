@@ -39,12 +39,29 @@ class COMPILER {
       files.map(async (file, index) => {
         const res = await this.compile(settings, file, origin, compiler);
 
-        if (res !== 0) {
-          msg.push([res, getNameByPath(file)]);
-          lines[index + 5] = "Compiling (" + getNameByPath(file) + ") - error";
+        if (res.code !== 0) {
+          msg.push([res.msg, getNameByPath(file)]);
+          if (settings.showSteps) {
+            lines[index + 5] =
+              "Compiling (" +
+              getNameByPath(file) +
+              ") - error       ::    " +
+              res.cmd;
+          } else {
+            lines[index + 5] =
+              "Compiling (" + getNameByPath(file) + ") - error";
+          }
         } else {
           filesToUpdate.push([file, origin]);
-          lines[index + 5] = "Compiling (" + getNameByPath(file) + ") - done";
+          if (settings.showSteps) {
+            lines[index + 5] =
+              "Compiling (" +
+              getNameByPath(file) +
+              ") - done       ::    " +
+              res.cmd;
+          } else {
+            lines[index + 5] = "Compiling (" + getNameByPath(file) + ") - done";
+          }
         }
 
         showInterface(lines);
@@ -81,14 +98,13 @@ class COMPILER {
       build.toUpperCase() === "DEBUG" ? "-O0 -g" : "-O3 -DNDEBUG";
 
     const fileName = getNameByPath(file);
-    const response = await executeCommand(
-      `${compiler} ${optimization} ${version} ${preprocessors} ${includes} -c ${file} -o ${origin}/build/obj/${fileName}.o`
-    );
+    const command = `${compiler} ${optimization} ${version} ${preprocessors} ${includes} -c ${file} -o ${origin}/build/obj/${fileName}.o`;
+    const response = await executeCommand(command);
     origin.replace("\\", "/");
     if (response.res !== 0) {
-      return response.msg;
+      return { code: 1, msg: response.msg, cmd: command };
     } else {
-      return 0;
+      return { code: 0, msg: "", cmd: command };
     }
   }
 
@@ -110,10 +126,9 @@ class COMPILER {
     const response = await executeCommand(command);
 
     if (response.res !== 0) {
-      out.appendLine(response.msg);
-      return 1;
+      return { code: 1, msg: response.msg, cmd: command };
     } else {
-      return 0;
+      return { code: 0, msg: "", cmd: command };
     }
   }
 }
@@ -190,10 +205,18 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     out.appendLine("Compilation failed. Aborting linking.");
     return 1;
   }
-  out.appendLine("Starting linking");
+  if (settings.showSteps) {
+    out.append("Starting linking     ::    ");
+  } else {
+    out.appendLine("Starting linking");
+  }
   const res2 = await comp.link(settings, origin, compiler);
-  if (res2 !== 0) {
+  if (settings.showSteps) {
+    out.appendLine(res2.cmd);
+  }
+  if (res2.code !== 0) {
     out.appendLine("Linking failed.");
+    out.appendLine(res2.msg);
     return 1;
   }
   const end = new Date();

@@ -1,5 +1,11 @@
 # Change Log
 
+Please reconfigure the project if you think you are missings settings or you are getting errors
+
+## [Update 1.5.2]
+
+    - Added the option to see the commands step by step in the settings files.
+
 ## [Update 1.4.7]
 
     - Added support for c language
