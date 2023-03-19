@@ -79,31 +79,10 @@ async function activate(context) {
       }
     }
   );
-  let executeDis = vscode.commands.registerCommand(
-    "CPP-Compiler.execute",
-    async () => {
-      const res = await askUser();
 
-      if (res === 0) {
-        const path_ = foundWorkspaces.find(
-          (item) => item.name === chosenWorkspace
-        ).uri.fsPath;
-
-        verifyFolderStructue(path_);
-        const settings = readFile(path.join(path_, "build/config/setting.yml"));
-        if (
-          fs.existsSync(path.join(path_, "build/out/" + settings.name + ".exe"))
-        ) {
-          const response = await executeCommand(
-            "start " + path.join(path_, "build/out/" + settings.name + ".exe")
-          );
-        } else {
-          vscode.window.showWarningMessage(
-            "No exectubale file was found for " + chosenWorkspace.toUpperCase()
-          );
-        }
-      }
-    }
+  let activateDis = vscode.commands.registerCommand(
+    "CPP-Compiler.activate",
+    () => {}
   );
 
   let configureDis = vscode.commands.registerCommand(
@@ -217,7 +196,7 @@ async function activate(context) {
 
   context.subscriptions.push(runDis);
   context.subscriptions.push(restartDis);
-  context.subscriptions.push(executeDis);
+  context.subscriptions.push(activateDis);
   context.subscriptions.push(configureDis);
 
   context.subscriptions.push(toggleCompilerStatusbar);

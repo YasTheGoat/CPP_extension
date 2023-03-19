@@ -9,7 +9,7 @@
     "theme": "dark"
   },
   "description": "An extension for compiling CPP and C projects. Supports debug and release mode with as many CPP or C files as you want",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -36,7 +36,7 @@
     "hpp",
     "h"
   ],
-  "activationEvents": ["onLanguage:cpp", "onLanguage:c"],
+  "activationEvents": ["onLanguage:cpp", "onLanguage:c", "onCommand:CPP-Compiler.activate"],
   "main": "./extension.js",
   "contributes": {
     "commands": [
@@ -49,8 +49,8 @@
         "title": "CPP_ : ReCompile project"
       },
       {
-        "command": "CPP-Compiler.execute",
-        "title": "CPP_ : Run project"
+        "command": "CPP-Compiler.activate",
+        "title": "CPP_ : Activate Extension"
       },
       {
         "command": "CPP-Compiler.configure",
