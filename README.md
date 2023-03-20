@@ -29,6 +29,26 @@ And Finally, this extension compiles your files in parallel (asynchronously), wh
 
 <br>
 
+    name: "app"                                 #Do not put any space in the name
+    application_type: "exe"                     # exe, dll, or slib
+    cpp_version: "auto"
+    build: "Debug"                              #Debug or Release
+    showSteps: true
+    include:
+        - exemple
+    library_directory:
+        - exemple
+    library:
+        - exemple
+    preprocessor:
+        - exemple
+    ressources:                                # The ressources are folders or files that will be copied into the out folder when the compilation is over
+        - exemple
+    ignore:
+        - exemple
+
+<br>
+
 # SYNTAX <br>
 
 1: When including header files in your cpp files, please take note that the files that you expect to change in the future (your custom header files for example ) need to be surrounded

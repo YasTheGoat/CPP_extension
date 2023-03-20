@@ -188,6 +188,12 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     }
   }
   const files_ = filterFiles(settings, history, files, origin);
+  if (files_.length === 0) {
+    vscode.window.showWarningMessage(
+      "There are no files ending in '.cpp' or '.c' to compile"
+    );
+    return 1;
+  }
   const projectName = getNameByPath(origin).toUpperCase();
   if (files_.length === 0) {
     out.appendLine(
@@ -247,7 +253,7 @@ const filterFiles = (settings, history, files, origin) => {
         if (stat_.isDirectory()) {
           findFiles(file_);
         } else {
-          if (file.endsWith("cpp")) {
+          if (file.endsWith("cpp") || file.endsWith("c")) {
             ignores.push(file_);
           }
         }

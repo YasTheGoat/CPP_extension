@@ -310,6 +310,7 @@ const run = async () => {
     }
   }
   verifyFolderStructue(folderPath);
+  verifySettings(folderPath);
 
   const settings = await readFile(
     path.join(folderPath, "build/config/setting.yml")
@@ -319,12 +320,6 @@ const run = async () => {
   );
 
   findRelevantFiles(folderPath, "cpp");
-  if (cppFiles.length === 0) {
-    vscode.window.showWarningMessage(
-      "There are no files ending in '.cpp' or '.c' to compile"
-    );
-    return;
-  }
 
   const res = await compileFiles(
     cppFiles,
@@ -478,6 +473,91 @@ const verifyFolderStructue = (origin) => {
     );
   }
 };
+
+const verifySettings = (origin) => {
+  const settings = readFile(path.join(origin, "build/config/setting.yml"));
+  var keys = [
+    "name",
+    "application_type",
+    "cpp_version",
+    "build",
+    "showSteps",
+    "include",
+    "library_directory",
+    "library",
+    "preprocessor",
+    "ressources",
+    "ignore",
+  ];
+
+  keys.forEach((key) => {
+    if (!settings || !Object.keys(settings)?.includes(key)) {
+      var newValue = "";
+      switch (key) {
+        case "name":
+          newValue = getNameByPath(origin);
+          break;
+        case "application_type":
+          newValue = "exe";
+          break;
+        case "cpp_version":
+          newValue = "auto";
+          break;
+        case "build":
+          newValue = "Debug";
+          break;
+        case "showSteps":
+          newValue = true;
+          break;
+        case "include":
+          newValue = ["exemple"];
+          break;
+        case "library_directory":
+          newValue = ["exemple"];
+          break;
+        case "library":
+          newValue = ["exemple"];
+          break;
+        case "preprocessor":
+          newValue = ["exemple"];
+          break;
+        case "ressources":
+          newValue = ["exemple"];
+          break;
+        case "ignore":
+          newValue = ["exemple"];
+          break;
+      }
+
+      if (newValue !== "") {
+        modifyFile(
+          key,
+          newValue,
+          path.join(origin, "build/config/setting.yml")
+        );
+      }
+    }
+  });
+
+  return;
+};
+// name: "app"       #Do not put any space in the name
+// application_type: "exe"                     # exe, dll, or slib
+// cpp_version: "auto"
+// build: "Debug"                              #Debug or Release
+// showSteps: true
+// include:
+//     - exemple
+// library_directory:
+//     - exemple
+// library:
+//     - exemple
+// preprocessor:
+//     - exemple
+// ressources:                                # The ressources are folders or files that will be copied into the out folder when the compilation is over
+//     - exemple
+// ignore:
+//     - exemple
 
 // This method is called when your extension is deactivated
 function deactivate() {}
