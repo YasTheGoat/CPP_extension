@@ -1,4 +1,4 @@
-Welcome to my CPP and C extension ! 🚀🚀🚀<br>
+Welcome to my [CPP and C extension](https://marketplace.visualstudio.com/items?itemName=bleastProgram.CPP-Compiler) ! 🚀🚀🚀<br>
 <br>
 
 # INFO <br>
