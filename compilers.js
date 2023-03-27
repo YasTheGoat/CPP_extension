@@ -5,10 +5,11 @@ const fs = require("fs");
 const { modifyFile } = require("./ymlFilesManager");
 const vscode = require("vscode");
 const showInterface = (lines) => {
-  out.clear();
+  let data = "";
   lines.forEach((line) => {
-    out.appendLine(line);
+    data += line + "\n";
   });
+  out.replace(data);
 };
 
 var filesToUpdate = [];
@@ -34,11 +35,11 @@ class COMPILER {
       lines.push("Compiling (" + getNameByPath(file) + ") - in progess");
     });
     lines.push("");
-    showInterface(lines);
+    // console.log(lines);
+    await showInterface(lines);
     await Promise.all(
       files.map(async (file, index) => {
         const res = await this.compile(settings, file, origin, compiler);
-
         if (res.code !== 0) {
           msg.push([res.msg, getNameByPath(file)]);
           if (settings.showSteps) {
@@ -64,7 +65,7 @@ class COMPILER {
           }
         }
 
-        showInterface(lines);
+        await showInterface(lines);
       })
     );
 
@@ -187,6 +188,7 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
       return 1;
     }
   }
+  filesToUpdate = [];
   const files_ = filterFiles(settings, history, files, origin);
   const projectName = getNameByPath(origin).toUpperCase();
   if (files_.length === 0) {
@@ -202,7 +204,12 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
   const comp = new COMPILER();
   const res1 = await comp.run(settings, files_, origin, compiler);
   if (res1 !== 0) {
-    out.appendLine("Compilation failed. Aborting linking.");
+    let end2 = new Date();
+    out.appendLine(
+      "Compilation failed after " +
+        Math.abs(end2 - start) +
+        "ms . Aborting linking."
+    );
     return 1;
   }
   if (settings.showSteps) {
@@ -215,7 +222,8 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     out.appendLine(res2.cmd);
   }
   if (res2.code !== 0) {
-    out.appendLine("Linking failed.");
+    let end3 = new Date();
+    out.appendLine("Linking failed after " + Math.abs(end3 - start) + "ms");
     out.appendLine(res2.msg);
     return 1;
   }
@@ -324,7 +332,6 @@ const filterFiles = (settings, history, files, origin) => {
       files.forEach((file) => {
         if (!ignores.includes(file)) {
           finalFiles.push(file);
-          updatehistory(file, origin);
         }
       });
     } else {
@@ -339,7 +346,6 @@ const filterFiles = (settings, history, files, origin) => {
     files.forEach((file) => {
       if (!ignores.includes(file)) {
         finalFiles.push(file);
-        updatehistory(file, origin);
       }
     });
   }
