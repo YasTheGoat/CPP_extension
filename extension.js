@@ -394,10 +394,12 @@ const run = async () => {
 
         await config.update("configurations", curr);
 
-        const res = await vscode.commands.executeCommand(
-          "workbench.action.debug.start",
-          "CPP_ Debug"
-        );
+//         const res = await vscode.commands.executeCommand(
+//           "workbench.action.debug.start",
+//           "CPP_ Debug"
+//         );
+        const response = await vscode.commands.executeCommand('vscode.startDebug', 'CPP_ Debug');
+
       } else {
         const response = await executeCommand(
           "start" + " " + path.join(folderPath, "build/out/" + settings.name)
