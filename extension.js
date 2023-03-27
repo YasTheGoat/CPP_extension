@@ -5,7 +5,7 @@ const os = require("os");
 const fs = require("fs");
 const path = require("path");
 const { compileFiles } = require("./compilers");
-const { executeCommand, getNameByPath } = require("./utils.js");
+const { executeCommand, getNameByPath, executeFile } = require("./utils.js");
 const {
   SettingsTemplate,
   readFile,
@@ -133,6 +133,7 @@ async function activate(context) {
   let toggleWorkspaceStatusbar = vscode.commands.registerCommand(
     "CPP-Compiler.toggleworkspace",
     async () => {
+      foundWorkspaces = await vscode.workspace.workspaceFolders;
       const currWorkspace = statusBarMenuWorkspace.text;
       if (foundWorkspaces.length > 0) {
         if (foundWorkspaces.length === 1) {
@@ -298,9 +299,11 @@ const run = async () => {
   cppFiles = [];
 
   const tempWorspaces = await vscode.workspace.workspaceFolders;
+  const currWorkspace = tempWorspaces.find(
+    (item) => item.name === chosenWorkspace
+  );
 
-  const folderPath = tempWorspaces.find((item) => item.name === chosenWorkspace)
-    .uri.fsPath;
+  const folderPath = currWorkspace.uri.fsPath;
 
   if (restart) {
     if (fs.existsSync(path.join(folderPath, "build/config/history.yml"))) {
@@ -366,8 +369,6 @@ const run = async () => {
         settings.build.toUpperCase() === "DEBUG" &&
         os.platform() !== "linux"
       ) {
-        const config = vscode.workspace.getConfiguration("launch", workspace);
-        var curr = [];
         const data = {
           name: "CPP_ Debug",
           type: "cppdbg",
@@ -389,15 +390,7 @@ const run = async () => {
             },
           ],
         };
-
-        curr.push(data);
-
-        await config.update("configurations", curr);
-
-        const res = await vscode.commands.executeCommand(
-          "workbench.action.debug.start",
-          "CPP_ Debug"
-        );
+        const res = await vscode.debug.startDebugging(folderPath, data);
       } else {
         const response = await executeCommand(
           "start" + " " + path.join(folderPath, "build/out/" + settings.name)

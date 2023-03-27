@@ -188,18 +188,12 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
     }
   }
   const files_ = filterFiles(settings, history, files, origin);
-  if (files_.length === 0) {
-    vscode.window.showWarningMessage(
-      "There are no files ending in '.cpp' or '.c' to compile"
-    );
-    return 1;
-  }
   const projectName = getNameByPath(origin).toUpperCase();
   if (files_.length === 0) {
     out.appendLine(
-      "All files in " +
+      "No file ending in '.cpp' or '.c' to compile. " +
         projectName +
-        " are up to date. Use 'CPP: Recompile project' to recompile the whole project"
+        " is UP TO DATE . Use 'CPP: Recompile project' to recompile the whole project"
     );
     return 0;
   }
