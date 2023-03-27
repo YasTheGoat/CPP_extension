@@ -2,6 +2,12 @@
 
 Please reconfigure the project if you think you are missings settings or you are getting errors
 
+## [Update 1.5.7]
+
+    - Improved the output, The outpur is now faster and there is no more flickering. Also
+        added show_steps option in the settings.yml file. when set to true, the extension output the command
+        that ran for each. Perfect for learning or for finding errors.
+
 ## [Update 1.5.2]
 
     - Added the option to see the commands step by step in the settings files.
