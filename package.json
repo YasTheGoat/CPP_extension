@@ -10,7 +10,7 @@
   "homepage": "https://github.com/BleastT/CPP_extension/blob/master/README.md",
   "bugs": {
     "url": "https://github.com/BleastT/CPP_extension/issues",
-    "email": "ayassinee2007@gmail.com"
+    "email": "bleastbt@gmail.com"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
     "name": "bleastProgram"
   },
   "description": "An extension for compiling CPP and C projects. Supports debug and release mode with as many CPP or C files as you want",
-  "version": "1.5.5",
+  "version": "1.5.7",
   "engines": {
     "vscode": "^1.75.0"
   },

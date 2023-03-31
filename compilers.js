@@ -110,7 +110,7 @@ class COMPILER {
   }
 
   async link(settings, origin, compiler) {
-    const { name, app_type, version, dependencies, librarys } = setupSettings(
+    const { name, app_type, dependencies, librarys } = setupSettings(
       settings,
       origin
     );
@@ -118,9 +118,9 @@ class COMPILER {
     // origin.replace("\\", "/");
     var command = "";
     if (app_type.toUpperCase() === "EXE") {
-      command = `${compiler} ${version} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
+      command = `${compiler} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
     } else if (app_type.toUpperCase() === "DLL") {
-      command = `${compiler} ${version} -shared -o ${origin}/build/out/${name}.dll ${origin}/build/obj/*.o -Wl,--out-implib,${origin}/build/out/lib${name}.a ${dependencies} ${librarys}`;
+      command = `${compiler} -shared -o ${origin}/build/out/${name}.dll ${origin}/build/obj/*.o -Wl,--out-implib,${origin}/build/out/lib${name}.a ${dependencies} ${librarys}`;
     } else if (app_type.toUpperCase() === "SLIB") {
       command = `ar rcs ${origin}/build/out/lib${name}.a ${origin}/build/obj/*.o`;
     }

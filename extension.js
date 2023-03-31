@@ -5,7 +5,7 @@ const os = require("os");
 const fs = require("fs");
 const path = require("path");
 const { compileFiles } = require("./compilers");
-const { executeCommand, getNameByPath, executeFile } = require("./utils.js");
+const { executeCommand, getNameByPath } = require("./utils.js");
 const {
   SettingsTemplate,
   readFile,
@@ -30,6 +30,8 @@ var cppFiles = [];
 
 var restart = false;
 
+var terminal = null;
+
 var statusBarMenuCompiler;
 var statusBarMenuWorkspace;
 var statusBarMenuRun;
@@ -42,6 +44,13 @@ async function activate(context) {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with  registerCommand
   // The commandId parameter must match the command field in package.json
+
+  // terminal = await vscode.window.createTerminal("CPP_ Terminal");
+  vscode.window.onDidCloseTerminal(function (ter) {
+    if (ter.name === "CPP_ Terminal") {
+      terminal = null;
+    }
+  });
   foundCompilers = await findCompilers();
   foundWorkspaces = await vscode.workspace.workspaceFolders;
   //STATUS BAR
@@ -293,6 +302,7 @@ const askUser = async (type) => {
 };
 
 const run = async () => {
+  await vscode.debug.stopDebugging();
   out.clear();
   out.show();
 
@@ -392,9 +402,15 @@ const run = async () => {
         };
         const res = await vscode.debug.startDebugging(folderPath, data);
       } else {
-        const response = await executeCommand(
-          "start" + " " + path.join(folderPath, "build/out/" + settings.name)
-        );
+        if (terminal === null) {
+          terminal = await vscode.window.createTerminal("CPP_ Terminal");
+        }
+        const ConvertedPath = path
+          .join(folderPath, "build/out/")
+          .split("\\")
+          .join("/");
+        terminal.show(true);
+        terminal.sendText(`cd ${ConvertedPath} && ./${settings.name}`);
       }
     } else {
       const name = getNameByPath(folderPath);
