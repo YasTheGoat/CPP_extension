@@ -169,6 +169,7 @@ const setupSettings = (settings, origin) => {
 };
 
 const compileFiles = async (files, settings, history, compiler, origin) => {
+  console.log("Starting build")
   if (
     settings.application_type.toUpperCase() !== "EXE" &&
     settings.application_type.toUpperCase() !== "DLL" &&
@@ -242,33 +243,7 @@ const compileFiles = async (files, settings, history, compiler, origin) => {
 };
 
 const filterFiles = (settings, history, files, origin) => {
-  const ignores = [];
-
-  const findFiles = (origin) => {
-    const stat = fs.statSync(origin);
-    if (stat.isDirectory()) {
-      const files = fs.readdirSync(origin);
-      files.forEach((file) => {
-        const file_ = path.join(origin, file);
-        const stat_ = fs.statSync(file_);
-
-        if (stat_.isDirectory()) {
-          findFiles(file_);
-        } else {
-          if (file.endsWith("cpp") || file.endsWith("c")) {
-            ignores.push(file_);
-          }
-        }
-      });
-    } else {
-      ignores.push(origin);
-    }
-  };
-  settings.ignore.forEach((ig) => {
-    if (ig !== "exemple") {
-      findFiles(path.join(origin, ig));
-    }
-  });
+  const ignores = settings.ignore;
 
   const objFiles = fs.readdirSync(path.join(origin, "build/obj"));
   for (let i = 0; i < objFiles.length; i++) {
@@ -276,7 +251,7 @@ const filterFiles = (settings, history, files, origin) => {
     var found = false;
     for (let b = 0; b < files.length; b++) {
       const fileName = getNameByPath(files[b]);
-      if (objName === fileName + ".o" && !ignores.includes(files[b])) {
+      if (objName === fileName + ".o" && !ignores.find(item => path.join(origin, item) === files[b])) {
         found = true;
         break;
       }
@@ -306,7 +281,7 @@ const filterFiles = (settings, history, files, origin) => {
             for (let i = 0; i < hFiles.length; i++) {
               const hmTime = fs.statSync(hFiles[i].file).mtime;
 
-              if (hmTime > hFiles[i].time && !ignores.includes(files[i])) {
+              if (hmTime > hFiles[i].time && !ignores.find(item => path.join(origin, item) === files[i])) {
                 finalFiles.push(files[i]);
                 break;
               }
@@ -317,7 +292,7 @@ const filterFiles = (settings, history, files, origin) => {
         }
       }
 
-      if (!found && !ignores.includes(files[i])) {
+      if (!found && !ignores.find(item => path.join(origin, item) === files[i])) {
         finalFiles.push(files[i]);
       }
     }
@@ -330,7 +305,7 @@ const filterFiles = (settings, history, files, origin) => {
         path.join(origin, "build/config/history.yml")
       );
       files.forEach((file) => {
-        if (!ignores.includes(file)) {
+        if (!ignores.find(item => path.join(origin, item) === file)) {
           finalFiles.push(file);
         }
       });
@@ -344,11 +319,12 @@ const filterFiles = (settings, history, files, origin) => {
       path.join(origin, "build/config/history.yml")
     );
     files.forEach((file) => {
-      if (!ignores.includes(file)) {
+      if (!ignores.find(item => path.join(origin, item) === file)) {
         finalFiles.push(file);
       }
     });
   }
+
   return finalFiles;
 };
 

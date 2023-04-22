@@ -20,7 +20,7 @@
     "name": "bleastProgram"
   },
   "description": "An extension for compiling CPP and C projects. Supports debug and release mode with as many CPP or C files as you want",
-  "version": "1.5.8",
+  "version": "1.5.9",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -29,7 +29,7 @@
     "Debuggers",
     "Other"
   ],
-  "keywords" : [
+  "keywords": [
     "cpp",
     "runner",
     "compile",
@@ -47,7 +47,11 @@
     "hpp",
     "h"
   ],
-  "activationEvents": ["onLanguage:cpp", "onLanguage:c", "onCommand:CPP-Compiler.activate"],
+  "activationEvents": [
+    "onLanguage:cpp",
+    "onLanguage:c",
+    "onCommand:CPP-Compiler.activate"
+  ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
@@ -69,10 +73,12 @@
       }
     ]
   },
-  "debuggers" : [{
-    "type" : "gdb",
-    "program" : "${workspaceFolder}/buid/out/sfmltest.exe"
-  }],
+  "debuggers": [
+    {
+      "type": "gdb",
+      "program": "${workspaceFolder}/buid/out/sfmltest.exe"
+    }
+  ],
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
@@ -92,7 +98,7 @@
   "dependencies": {
     "child_process": "^1.0.2",
     "fs-extra": "^11.1.0",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "vscode": "^1.1.37"
   }
 }
-

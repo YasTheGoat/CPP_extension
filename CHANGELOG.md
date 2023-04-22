@@ -3,6 +3,10 @@
 Please reconfigure the project if you think you are missings settings or you are getting errors
 
 ## [Update 1.5.8]
+    - The system that that fetches and filters the source files is now almost instantaneous.
+
+
+## [Update 1.5.8]
 
     - Now , when compiling in release mode, the app runs automatically in the integrated terminal. Works on mac,linux and windows in my test.
     Debugging was not tested on mac and linux, it may work or not.

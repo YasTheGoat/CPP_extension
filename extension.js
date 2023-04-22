@@ -332,8 +332,7 @@ const run = async () => {
     path.join(folderPath, "build/config/history.yml")
   );
 
-  findRelevantFiles(folderPath, "cpp");
-
+  findRelevantFiles(folderPath, folderPath, settings.ignore);
   const res = await compileFiles(
     cppFiles,
     settings,
@@ -437,17 +436,20 @@ const findCompilers = async () => {
   return final;
 };
 
-const findRelevantFiles = (startPath) => {
-  if (!fs.existsSync(startPath)) {
-    console.log("no dir ", startPath);
+const findRelevantFiles = (startPath, lookPath, ignore) => {
+  if (!fs.existsSync(lookPath)) {
+    console.log("no dir ", lookPath);
     return;
   }
-  var files = fs.readdirSync(startPath);
+  var files = fs.readdirSync(lookPath);
   for (var i = 0; i < files.length; i++) {
-    var filename = path.join(startPath, files[i]);
+    var filename = path.join(lookPath, files[i]);
     var stat = fs.statSync(filename);
     if (stat.isDirectory()) {
-      findRelevantFiles(filename); //recurse
+      if(!ignore.find((item) => path.join(startPath, item) === filename))
+      {
+        findRelevantFiles(startPath,filename, ignore); //recurse
+      }
     } else if (filename.endsWith("cpp") || filename.endsWith("c")) {
       cppFiles.push(filename);
     }
