@@ -156,8 +156,20 @@ const setupSettings = (settings, origin) => {
     if (lib !== "exemple") librarys += `-l${lib} `;
   });
   settings.preprocessor.forEach((pre) => {
-    if (pre !== "exemple") preprocessors += `-D${pre} `;
+    if (pre !== "exemple")
+    {
+      var temp = pre.replace(/\s/g,'') ;
+
+      if(temp.includes(","))
+      {
+        preprocessors += `-D${temp.split(',')[0]}=${temp.split(`,`)[1]} `;
+      }
+      else{
+        preprocessors += `-D${temp} `;
+      }
+    }
   });
+
 
   return {
     name: name,
