@@ -1,6 +1,8 @@
 # Change Log
 
 Please reconfigure the project if you think you are missings settings or you are getting errors
+## [Update 1.6.1]
+    - You can now add values to preprocessors -> NAME,VALUE
 
 ## [Update 1.6.0]
     - Added a "showConsole" setting that allows you to decide weither the application should have a console or not.
