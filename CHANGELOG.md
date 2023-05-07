@@ -2,7 +2,11 @@
 
 Please reconfigure the project if you think you are missings settings or you are getting errors
 
-## [Update 1.5.8]
+## [Update 1.6.0]
+    - Added a "showConsole" setting that allows you to decide weither the application should have a console or not.
+
+
+## [Update 1.5.9]
     - The system that that fetches and filters the source files is now almost instantaneous.
 
 

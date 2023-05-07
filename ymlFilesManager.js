@@ -6,6 +6,7 @@ application_type: "exe"                     # exe, dll, or slib
 cpp_version: "auto" 
 build: "Debug"                              #Debug or Release
 showSteps: true
+showConsole: true                           # This parameter allows you to specify wheither a console should appear alongside your application or not
 include:
     - exemple
 library_directory:

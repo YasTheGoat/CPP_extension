@@ -499,6 +499,7 @@ const verifySettings = (origin) => {
     "preprocessor",
     "ressources",
     "ignore",
+    "showConsole"
   ];
 
   keys.forEach((key) => {
@@ -537,6 +538,9 @@ const verifySettings = (origin) => {
           break;
         case "ignore":
           newValue = ["exemple"];
+          break;
+        case "showConsole":
+          newValue = true;
           break;
       }
 

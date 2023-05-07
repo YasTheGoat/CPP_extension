@@ -116,9 +116,12 @@ class COMPILER {
     );
 
     // origin.replace("\\", "/");
+
+    var showConsole = settings.showConsole ? "" : "-mwindows";
+
     var command = "";
     if (app_type.toUpperCase() === "EXE") {
-      command = `${compiler} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys}`;
+      command = `${compiler} ${origin}/build/obj/*.o -o ${origin}/build/out/${name} ${dependencies} ${librarys} ${showConsole}`;
     } else if (app_type.toUpperCase() === "DLL") {
       command = `${compiler} -shared -o ${origin}/build/out/${name}.dll ${origin}/build/obj/*.o -Wl,--out-implib,${origin}/build/out/lib${name}.a ${dependencies} ${librarys}`;
     } else if (app_type.toUpperCase() === "SLIB") {
