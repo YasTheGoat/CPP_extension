@@ -40,9 +40,9 @@ And Finally, this extension compiles your files in parallel (asynchronously), wh
         - exemple
     library:
         - exemple
-    preprocessor:
+    preprocessor:                              # You can add preprocessors -> NAME and preprocessors with values -> NAME,VALUE
         - exemple
-    ressources:                                # The ressources are folders or files that will be copied into the out folder when the compilation is over
+    ressources:                                # The ressources are folders or files that will be copied into the out folder
         - exemple
     ignore:
         - exemple

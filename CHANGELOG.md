@@ -1,6 +1,9 @@
 # Change Log
 
 Please reconfigure the project if you think you are missings settings or you are getting errors
+## [Update 1.6.2]
+    - Changed the release optimization tag
+
 ## [Update 1.6.1]
     - You can now add values to preprocessors -> NAME,VALUE
 
