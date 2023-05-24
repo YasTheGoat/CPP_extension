@@ -375,9 +375,15 @@ const run = async () => {
       fs.existsSync(path.join(folderPath, "build/out/" + settings.name))
     ) {
       if (
-        settings.build.toUpperCase() === "DEBUG" &&
-        os.platform() !== "linux"
+        settings.build.toUpperCase().includes("RELEASE")
       ) {
+        if (terminal === null) {
+          terminal = await vscode.window.createTerminal("CPP_ Terminal");
+        }
+        const Path = path.join(folderPath, "build/out/" + settings.name);
+        terminal.show(true);
+        terminal.sendText(`${Path}`);
+      } else {
         const data = {
           name: "CPP_ Debug",
           type: "cppdbg",
@@ -400,16 +406,6 @@ const run = async () => {
           ],
         };
         const res = await vscode.debug.startDebugging(folderPath, data);
-      } else {
-        if (terminal === null) {
-          terminal = await vscode.window.createTerminal("CPP_ Terminal");
-        }
-        const ConvertedPath = path
-          .join(folderPath, "build/out/")
-          .split("\\")
-          .join("/");
-        terminal.show(true);
-        terminal.sendText(`cd ${ConvertedPath} && ./${settings.name}`);
       }
     } else {
       const name = getNameByPath(folderPath);

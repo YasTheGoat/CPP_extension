@@ -95,8 +95,21 @@ class COMPILER {
       settings,
       origin
     );
-    const optimization =
-      build.toUpperCase() === "DEBUG" ? "-O0 -g" : "-Ofast -DNDEBUG";
+    let optimization = "-Og -g";
+
+    if(build.toUpperCase().includes("RELEASE"))
+    {
+      if(build.includes("-"))
+      {
+        var o = build.split("-")[1];
+
+        optimization = `-O${o} -DNDEBUG`;
+      }
+      else{
+        optimization = "-O3 -DNDEBUG";
+      }
+    }
+
 
     const fileName = getNameByPath(file);
     const command = `${compiler} ${optimization} ${version} ${preprocessors} ${includes} -c ${file} -o ${origin}/build/obj/${fileName}.o`;

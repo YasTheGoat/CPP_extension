@@ -6,7 +6,14 @@ Welcome to my [CPP and C extension](https://marketplace.visualstudio.com/items?i
 <br>
 This extension allows you to build your cpp or c projects. Your project can contain an infinite amount of files and my extension will automatically find them all.<br>
 You can add include paths, librarys paths, librarys names, preprocessors, and ignore paths which will be ignored in the build.<br>
-You can specify an application type. It can either be an executable, a dynamic library or a static library (exe, dll, slib). Dll only works with g++!
+You can specify an application type. It can either be an executable, a dynamic library or a static library (exe, dll, slib). Dll only works with g++!<br>
+
+You can build in both debug mode and releade mode.<br>
+You can simply switch between debug and release in the settings file. It will use the -O3 optimisation level by default. if you want to specify a custom level, <br>
+You can simply specify it like this ->  build: Release-LEVEL -> The LEVEL is where you put the flag. <br>
+Do not add "-O" before, simply specify the name like 1, 2, 3, fast,g. <br>
+List of all the available flags : https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
+
 <br>
 <br>
 

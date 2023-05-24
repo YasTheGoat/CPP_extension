@@ -1,6 +1,12 @@
 # Change Log
 
 Please reconfigure the project if you think you are missings settings or you are getting errors
+## [Update 1.6.3]
+    - When building for release mode, you can now decide the optmisiation level by yourself. The default one is -O3. 
+        To specify a custom flag -> RELEASE-1 , RELEASE-2 , RELEASE-3 , RELEASE-fast, etc... Check online to see all the available optimisation flags
+
+    - Now when building in release mode, the program actually runs correctly in terminal. 
+
 ## [Update 1.6.2]
     - Changed the release optimization tag
 
